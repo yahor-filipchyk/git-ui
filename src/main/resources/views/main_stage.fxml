@@ -5,7 +5,8 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+<?import com.sun.javafx.webkit.theme.ContextMenuImpl.MenuImpl?>
+<GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="689.0"
           xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="org.yahor.vcs.ui.controllers.MainStageController">
     <columnConstraints>
@@ -22,6 +23,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="%menu.file">
                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#open" text="%menu.file.open"/>
                         <MenuItem mnemonicParsing="false" onAction="#close" text="%menu.file.close"/>
                     </items>
                 </Menu>
@@ -31,9 +33,9 @@
                     <items>
                         <Menu mnemonicParsing="false" text="%menu.options.language">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="English" onAction="#changeLocale"/>
-                                <MenuItem mnemonicParsing="false" text="Беларуская" onAction="#changeLocale"/>
-                                <MenuItem mnemonicParsing="false" text="Русский" onAction="#changeLocale"/>
+                                <MenuItem mnemonicParsing="false" onAction="#changeLocale" text="English"/>
+                                <MenuItem mnemonicParsing="false" onAction="#changeLocale" text="Беларуская"/>
+                                <MenuItem mnemonicParsing="false" onAction="#changeLocale" text="Русский"/>
                             </items>
                         </Menu>
                     </items>
@@ -48,8 +50,11 @@
         <Label maxHeight="20.0" minHeight="20.0" prefHeight="20.0" prefWidth="5000.0" text="%statusbar.initial"
                GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
             <padding>
-                <Insets left="7.0"/>
+                <Insets left="5.0"/>
             </padding>
         </Label>
+        <TabPane prefHeight="5000.0" prefWidth="5000.0" tabClosingPolicy="SELECTED_TAB" GridPane.columnSpan="2147483647"
+                 GridPane.rowIndex="1" fx:id="tabPane">
+        </TabPane>
     </children>
 </GridPane>

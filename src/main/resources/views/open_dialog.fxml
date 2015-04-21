@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="151.0"
+         fx:controller="org.yahor.vcs.ui.controllers.OpenDialogController"
+         prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1"
+         xmlns="http://javafx.com/javafx/8">
+    <tabs>
+        <Tab text="%dialog.open.tab.clone">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+            </content>
+        </Tab>
+        <Tab text="%dialog.open.tab.open">
+            <content>
+                <GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="400.0" prefWidth="400.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="120.0" prefWidth="120.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="50.0" minHeight="30.0" prefHeight="50.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="35.0" minHeight="30.0" prefHeight="35.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="35.0" minHeight="30.0" prefHeight="35.0" vgrow="NEVER"/>
+                    </rowConstraints>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" GridPane.columnSpan="2147483647" GridPane.valignment="BOTTOM"
+                              GridPane.vgrow="NEVER">
+                            <children>
+                                <Label text="%dialog.open.label.working_copy">
+                                    <GridPane.margin>
+                                        <Insets left="10.0"/>
+                                    </GridPane.margin>
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <TextField HBox.hgrow="ALWAYS" fx:id="workingCopyPath">
+                                    <HBox.margin>
+                                        <Insets left="5.0" right="10.0"/>
+                                    </HBox.margin>
+                                </TextField>
+                                <Button mnemonicParsing="false" text="%dialog.open.button.browse"
+                                        onAction="#browseRepo">
+                                    <HBox.margin>
+                                        <Insets right="10.0"/>
+                                    </HBox.margin>
+                                </Button>
+                            </children>
+                            <GridPane.margin>
+                                <Insets top="10.0"/>
+                            </GridPane.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" GridPane.columnSpan="2147483647" GridPane.rowIndex="1"
+                              GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+                            <children>
+                                <Label text="dialog.open.label.repo_name" GridPane.rowIndex="1">
+                                    <GridPane.margin>
+                                        <Insets left="10.0"/>
+                                    </GridPane.margin>
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <TextField HBox.hgrow="ALWAYS" fx:id="repoName">
+                                    <HBox.margin>
+                                        <Insets left="5.0" right="10.0"/>
+                                    </HBox.margin>
+                                </TextField>
+                            </children>
+                            <GridPane.margin>
+                                <Insets/>
+                            </GridPane.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1"
+                              GridPane.rowIndex="2">
+                            <children>
+                                <Button minWidth="60.0" mnemonicParsing="false" text="%dialog.open.button.add"
+                                        onAction="#confirmAddRepo">
+                                    <HBox.margin>
+                                        <Insets left="5.0"/>
+                                    </HBox.margin>
+                                </Button>
+                                <Button minWidth="60.0" mnemonicParsing="false" text="%dialog.open.button.cancel"
+                                        onAction="#cancelAddRepo">
+                                    <HBox.margin>
+                                        <Insets left="10.0" right="10.0"/>
+                                    </HBox.margin>
+                                </Button>
+                            </children>
+                        </HBox>
+                    </children>
+                </GridPane>
+            </content>
+        </Tab>
+        <Tab text="%dialog.open.tab.create">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+            </content>
+        </Tab>
+    </tabs>
+</TabPane>

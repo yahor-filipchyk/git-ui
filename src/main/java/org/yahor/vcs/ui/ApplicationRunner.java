@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.yahor.vcs.ui.utils.UTF8Control;
 
@@ -38,7 +39,7 @@ public class ApplicationRunner extends Application {
             bundle = ResourceBundle.getBundle(LANG_BUNDLE, locale, new UTF8Control());
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setResources(bundle);
-            Parent root = fxmlLoader.load(ApplicationRunner.class.getClassLoader().getResourceAsStream(MAIN_STAGE_FILE));
+            GridPane root = fxmlLoader.load(ApplicationRunner.class.getClassLoader().getResourceAsStream(MAIN_STAGE_FILE));
             primaryStage.setTitle(bundle.getString(WINDOW_TITLE));
             Dimension screensSize = Toolkit.getDefaultToolkit().getScreenSize();
             if (primaryStage.getScene() == null) {
