@@ -24,7 +24,8 @@ public class MainStageController implements Initializable {
         Platform.exit();
     }
 
-    @FXML void changeLocale(ActionEvent event) throws IOException {
+    @FXML
+    void changeLocale(ActionEvent event) throws IOException {
         MenuItem source = (MenuItem) event.getSource();
         ApplicationRunner.updateRoot(Language.getByLabelOrDefault(source.getText()));
     }
