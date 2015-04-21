@@ -10,7 +10,6 @@ import org.yahor.vcs.ui.utils.Language;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
