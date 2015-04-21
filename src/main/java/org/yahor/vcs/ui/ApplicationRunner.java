@@ -41,7 +41,11 @@ public class ApplicationRunner extends Application {
             Parent root = fxmlLoader.load(ApplicationRunner.class.getClassLoader().getResourceAsStream(MAIN_STAGE_FILE));
             primaryStage.setTitle(bundle.getString(WINDOW_TITLE));
             Dimension screensSize = Toolkit.getDefaultToolkit().getScreenSize();
-            primaryStage.setScene(new Scene(root, 0.9 * screensSize.getWidth(), 0.9 * screensSize.getHeight()));
+            if (primaryStage.getScene() == null) {
+                primaryStage.setScene(new Scene(root, 0.9 * screensSize.getWidth(), 0.9 * screensSize.getHeight()));
+            } else {
+                primaryStage.getScene().setRoot(root);
+            }
         } catch (MissingResourceException ex) {
             // TODO update status bar with error message
         }
