@@ -9,6 +9,9 @@ import org.yahor.vcs.ui.utils.UTF8Control;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
@@ -21,17 +24,27 @@ public class ApplicationRunner extends Application {
     private static final String WINDOW_TITLE = "window.title";
 
     private static ResourceBundle bundle;
+    private static Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        bundle = ResourceBundle.getBundle(LANG_BUNDLE, new UTF8Control());
-        fxmlLoader.setResources(bundle);
-        Parent root = fxmlLoader.load(getClass().getClassLoader().getResourceAsStream(MAIN_STAGE_FILE));
-        primaryStage.setTitle(bundle.getString(WINDOW_TITLE));
-        Dimension screensSize = Toolkit.getDefaultToolkit().getScreenSize();
-        primaryStage.setScene(new Scene(root, 0.9 * screensSize.getWidth(), 0.9 * screensSize.getHeight()));
+        ApplicationRunner.primaryStage = primaryStage;
+        updateRoot(Locale.getDefault());
         primaryStage.show();
+    }
+
+    public static void updateRoot(Locale locale) throws IOException {
+        try {
+            bundle = ResourceBundle.getBundle(LANG_BUNDLE, locale, new UTF8Control());
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setResources(bundle);
+            Parent root = fxmlLoader.load(ApplicationRunner.class.getClassLoader().getResourceAsStream(MAIN_STAGE_FILE));
+            primaryStage.setTitle(bundle.getString(WINDOW_TITLE));
+            Dimension screensSize = Toolkit.getDefaultToolkit().getScreenSize();
+            primaryStage.setScene(new Scene(root, 0.9 * screensSize.getWidth(), 0.9 * screensSize.getHeight()));
+        } catch (MissingResourceException ex) {
+            // TODO update status bar with error message
+        }
     }
 
     public static ResourceBundle getResources() {

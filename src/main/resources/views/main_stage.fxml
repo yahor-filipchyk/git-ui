@@ -5,38 +5,51 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
-    <RowConstraints maxHeight="5000.0" minHeight="10.0" prefHeight="5000.0" vgrow="ALWAYS" />
-    <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="NEVER" />
-  </rowConstraints>
-   <children>
-      <MenuBar GridPane.columnSpan="2147483647">
-        <menus>
-          <Menu mnemonicParsing="false" text="%menu.file">
-            <items>
-              <MenuItem mnemonicParsing="false" text="%menu.file.close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="%menu.edit">
-          </Menu>
-          <Menu mnemonicParsing="false" text="%menu.help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="%menu.help.about" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <Label maxHeight="20.0" minHeight="20.0" prefHeight="20.0" prefWidth="5000.0" text="%statusbar.initial"
-             GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
-         <padding>
-            <Insets left="7.0" />
-         </padding>
-      </Label>
-   </children>
+<GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.yahor.vcs.ui.controllers.MainStageController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="NEVER"/>
+        <RowConstraints maxHeight="5000.0" minHeight="10.0" prefHeight="5000.0" vgrow="ALWAYS"/>
+        <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="NEVER"/>
+    </rowConstraints>
+    <children>
+        <MenuBar GridPane.columnSpan="2147483647">
+            <menus>
+                <Menu mnemonicParsing="false" text="%menu.file">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#close" text="%menu.file.close"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%menu.edit">
+                </Menu>
+                <Menu mnemonicParsing="false" text="%menu.options">
+                    <items>
+                        <Menu mnemonicParsing="false" text="%menu.options.language">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="English" onAction="#changeLocale"/>
+                                <MenuItem mnemonicParsing="false" text="Беларуская" onAction="#changeLocale"/>
+                                <MenuItem mnemonicParsing="false" text="Русский" onAction="#changeLocale"/>
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%menu.help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="%menu.help.about"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <Label maxHeight="20.0" minHeight="20.0" prefHeight="20.0" prefWidth="5000.0" text="%statusbar.initial"
+               GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+            <padding>
+                <Insets left="7.0"/>
+            </padding>
+        </Label>
+    </children>
 </GridPane>
