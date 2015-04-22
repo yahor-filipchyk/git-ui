@@ -4,18 +4,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author yfilipchyk

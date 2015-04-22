@@ -1,11 +1,10 @@
 package org.yahor.vcs.ui;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.yahor.vcs.ui.utils.FXUtils;
 import org.yahor.vcs.ui.utils.UTF8Control;
 
 import java.awt.Dimension;
@@ -37,9 +36,7 @@ public class ApplicationRunner extends Application {
     public static void updateRoot(Locale locale) throws IOException {
         try {
             bundle = ResourceBundle.getBundle(LANG_BUNDLE, locale, new UTF8Control());
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setResources(bundle);
-            GridPane root = fxmlLoader.load(ApplicationRunner.class.getClassLoader().getResourceAsStream(MAIN_STAGE_FILE));
+            GridPane root = (GridPane) FXUtils.loadPane(MAIN_STAGE_FILE, bundle);
             primaryStage.setTitle(bundle.getString(WINDOW_TITLE));
             Dimension screensSize = Toolkit.getDefaultToolkit().getScreenSize();
             if (primaryStage.getScene() == null) {

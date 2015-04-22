@@ -10,7 +10,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -78,7 +77,7 @@ public class MainStageController implements Initializable, Observer {
             Pair gridPaneWithController = FXUtils.loadPaneWithController("views/project_tab.fxml", bundle);
             Tab newTab = new Tab(event.getRepoName());
             GridPane gridPane = (GridPane) gridPaneWithController.getKey();
-            gridPane.prefHeightProperty().bind(tabPane.heightProperty());
+            gridPane.prefHeightProperty().bind(tabPane.heightProperty().add(-30));
             gridPane.prefWidthProperty().bind(tabPane.widthProperty());
             newTab.setContent(gridPane);
 //            gridPaneWithController.getKey().
