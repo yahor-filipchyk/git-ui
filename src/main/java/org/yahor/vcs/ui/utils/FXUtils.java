@@ -3,6 +3,9 @@ package org.yahor.vcs.ui.utils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.TreeItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -44,5 +47,14 @@ public final class FXUtils {
 
     public static Color getColor(ResourceBundle bundle, String key) {
         return Color.web(bundle.getString(key));
+    }
+
+    public static TreeItem<String> createTreeItemWithIcon(String label, Image icon, int imageHeight) {
+        TreeItem<String> treeItem = new TreeItem<>(label);
+        ImageView imageView = new ImageView(icon);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(imageHeight);
+        treeItem.setGraphic(imageView);
+        return treeItem;
     }
 }

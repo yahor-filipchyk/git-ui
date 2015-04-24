@@ -1,56 +1,47 @@
 package org.yahor.vcs.ui.git
 
+import javafx.scene.control.TreeItem
+import javafx.scene.image.Image
+
 import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.lib.Constants
+import org.yahor.vcs.ui.utils.FXUtils
 import scala.collection.JavaConversions._
-import scala.collection.mutable
 
 class Repo(val repo: Repository) {
 
   import Repo._
 
-  def tags: java.util.List[String] = repo.getTags.entrySet().map(_.getKey).toList
+  def tags: java.util.List[String] = repo.getTags.entrySet().map(_.getKey).toList.sorted
 
-  def branches: java.util.Map[String, Object] = {
-    var heads: Map[String, Object] = Map.empty
-    var remotes: Map[String, Object] = Map.empty
+  def branches: java.util.Map[String, Tree] = {
+    val heads = Tree("", List())
+    val remotes = Tree("", List())
     for ((key, value) <- repo.getAllRefs) {
       if (key.startsWith(Constants.R_HEADS)) {
-        if (key.contains('/')) {
-          val prefix = key.substring(0, key.indexOf('/'))
-          val suffix = key.substring(prefix.length)
-          if (heads.contains(prefix)) heads(prefix).asInstanceOf[List] ++
-        }
+        heads.add(Repository.shortenRefName(key))
+      } else if (key.startsWith(Constants.R_REMOTES)) {
+        remotes.add(Repository.shortenRefName(key))
       }
     }
     Map(BRANCHES -> heads, REMOTES -> remotes)
   }
-
-  def getRefs
-
-  def getPath(ref: String): List[String] = ref.split('/').toList
-
-  case class Tree(label: String, var children: List[Tree]) {
-    def addChild(tree: Tree) = children = tree :: children
-    def add(label: String): None = {
-      if (!label.contains('/')) addChild(Tree(label, List()))
-      else {
-        val prefix = label.substring(0, label.indexOf('/'))
-        val suffix = label.substring(prefix.length + 1)
-        val matched = children.find(_.label == prefix)
-        if (matched.isEmpty) {
-          val newItem = Tree(prefix, List())
-          newItem.add(suffix)
-          addChild(newItem)
-        } else {
-          matched.get.add(suffix)
-        }
-      }
-    }
-  }
 }
 
 object Repo {
+
   val BRANCHES = "Branches"
   val REMOTES = "Remotes"
+
+  def addFoldersAndBranches(rootTreeItem: TreeItem[String], tree: Tree, folderIcon: Image, branchIcon: Image) {
+    tree match {
+      case Tree("", children) => children.foreach(t => addFoldersAndBranches(rootTreeItem, t, folderIcon, branchIcon))
+      case Tree(label, List()) => rootTreeItem.getChildren.add(FXUtils.createTreeItemWithIcon(label, branchIcon, 10))
+      case Tree(label, head :: rest) => {
+        val folderItem = FXUtils.createTreeItemWithIcon(label, folderIcon, 15)
+        (head :: rest).foreach(t => addFoldersAndBranches(folderItem, t, folderIcon, branchIcon))
+        rootTreeItem.getChildren.add(folderItem)
+      }
+    }
+  }
 }
