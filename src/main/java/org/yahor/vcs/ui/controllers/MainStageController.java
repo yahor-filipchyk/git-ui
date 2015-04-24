@@ -17,6 +17,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.yahor.vcs.ui.ApplicationRunner;
 import org.yahor.vcs.ui.events.RepoAddedEvent;
+import org.yahor.vcs.ui.git.Repo;
 import org.yahor.vcs.ui.utils.FXUtils;
 import org.yahor.vcs.ui.utils.Language;
 
@@ -86,7 +87,7 @@ public class MainStageController implements Initializable, Observer {
 //            tabPane.set
             System.out.println("Added new tab");
             try {
-                ((RepoTabController) gridPaneWithController.getValue()).loadRepo(repository);
+                ((RepoTabController) gridPaneWithController.getValue()).loadRepo(new Repo(repository));
             } catch (GitAPIException e) {
                 e.printStackTrace();
             }
