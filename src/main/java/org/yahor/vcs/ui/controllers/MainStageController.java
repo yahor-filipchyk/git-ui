@@ -45,7 +45,6 @@ public class MainStageController implements Initializable, Observer {
         stage.setTitle(bundle.getString(OPEN_DIALOG_TITLE));
         Pair<Parent, Observable> sceneWithController = FXUtils.loadPaneWithController(OPEN_DIALOG_FILE, bundle);
         stage.setScene(new Scene(sceneWithController.getKey()));
-        System.out.println(sceneWithController.getValue().countObservers());
         sceneWithController.getValue().addObserver(this);
         stage.show();
     }
@@ -81,11 +80,8 @@ public class MainStageController implements Initializable, Observer {
             gridPane.prefHeightProperty().bind(tabPane.heightProperty().add(-30));
             gridPane.prefWidthProperty().bind(tabPane.widthProperty());
             newTab.setContent(gridPane);
-//            gridPaneWithController.getKey().
             tabPane.getTabs().add(newTab);
             tabPane.getSelectionModel().select(newTab);
-//            tabPane.set
-            System.out.println("Added new tab");
             ((RepoTabController) gridPaneWithController.getValue()).loadRepo(new Repo(repository));
         } catch (IOException e) {
             e.printStackTrace();
