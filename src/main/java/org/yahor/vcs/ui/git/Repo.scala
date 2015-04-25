@@ -12,6 +12,8 @@ class Repo(val repo: Repository) {
 
   import Repo._
 
+  def close(): Unit = repo.close()
+
   def tags: java.util.List[String] = repo.getTags.entrySet().map(_.getKey).toList.sorted
 
   def branches: java.util.Map[String, Tree] = {

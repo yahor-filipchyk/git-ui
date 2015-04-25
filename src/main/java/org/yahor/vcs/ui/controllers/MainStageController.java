@@ -2,6 +2,8 @@ package org.yahor.vcs.ui.controllers;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -75,15 +77,20 @@ public class MainStageController implements Initializable, Observer {
                     .readEnvironment() // scan environment GIT_* variables
                     .findGitDir() // scan up the file system tree
                     .build();
+            Repo repo = new Repo(repository);
             Pair gridPaneWithController = FXUtils.loadPaneWithController(PROJECT_TAB_FILE, bundle);
             Tab newTab = new Tab(event.getRepoName());
+            newTab.setOnCloseRequest(closeEvent -> {
+               // TODO implement showing confirmation dialog
+            });
+            newTab.setOnClosed(closedEvent -> repo.close());
             GridPane gridPane = (GridPane) gridPaneWithController.getKey();
             gridPane.prefHeightProperty().bind(tabPane.heightProperty().add(-30));
             gridPane.prefWidthProperty().bind(tabPane.widthProperty());
             newTab.setContent(gridPane);
             tabPane.getTabs().add(newTab);
             tabPane.getSelectionModel().select(newTab);
-            ((RepoTabController) gridPaneWithController.getValue()).loadRepo(new Repo(repository));
+            ((RepoTabController) gridPaneWithController.getValue()).loadRepo(repo);
         } catch (IOException e) {
             e.printStackTrace();
         }
