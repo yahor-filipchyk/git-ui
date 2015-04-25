@@ -33,6 +33,7 @@ import java.util.ResourceBundle;
 public class MainStageController implements Initializable, Observer {
 
     private static final String OPEN_DIALOG_FILE = "views/open_dialog.fxml";
+    private static final String PROJECT_TAB_FILE = "views/project_tab.fxml";
     private static final String OPEN_DIALOG_TITLE = "dialog.open.title";
 
     private ResourceBundle bundle;
@@ -74,7 +75,7 @@ public class MainStageController implements Initializable, Observer {
                     .readEnvironment() // scan environment GIT_* variables
                     .findGitDir() // scan up the file system tree
                     .build();
-            Pair gridPaneWithController = FXUtils.loadPaneWithController("views/project_tab.fxml", bundle);
+            Pair gridPaneWithController = FXUtils.loadPaneWithController(PROJECT_TAB_FILE, bundle);
             Tab newTab = new Tab(event.getRepoName());
             GridPane gridPane = (GridPane) gridPaneWithController.getKey();
             gridPane.prefHeightProperty().bind(tabPane.heightProperty().add(-30));
