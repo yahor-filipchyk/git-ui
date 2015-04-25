@@ -40,11 +40,10 @@ object Repo {
       case Tree("", children) => children.foreach(t => addFoldersAndBranches(rootTreeItem, t, folderIcon, branchIcon))
       case Tree(label, List()) =>
         rootTreeItem.getChildren.add(FXUtils.createTreeItemWithIcon(label, branchIcon, 10, false))
-      case Tree(label, children) if children.nonEmpty => {
+      case Tree(label, children) if children.nonEmpty =>
         val folderItem = FXUtils.createTreeItemWithIcon(label, folderIcon, 15, false)
         children.foreach(t => addFoldersAndBranches(folderItem, t, folderIcon, branchIcon))
         rootTreeItem.getChildren.add(folderItem)
-      }
     }
   }
 }

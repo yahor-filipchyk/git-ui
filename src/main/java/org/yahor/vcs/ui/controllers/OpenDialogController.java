@@ -43,11 +43,11 @@ public class OpenDialogController extends Observable implements Initializable {
     @FXML private Button openRepoBtn;
 
     private ResourceBundle bundle;
-    private DirectoryChooser directoryChooser = new DirectoryChooser();
+    private final DirectoryChooser directoryChooser = new DirectoryChooser();
     private File chosenDir;
 
     @FXML
-    public void browseRepo(ActionEvent event) throws IOException {
+    public void browseRepo(ActionEvent event) {
         File dir = directoryChooser.showDialog(FXUtils.getStage(workingCopyPath));
         if (dir == null) {
             return;
@@ -67,7 +67,7 @@ public class OpenDialogController extends Observable implements Initializable {
     }
 
     @FXML
-    public void confirmAddRepo(ActionEvent event) throws IOException {
+    public void confirmAddRepo(ActionEvent event) {
         if (chosenDir != null) {
             Stage currentStage = FXUtils.getStage(workingCopyPath);
             setChanged();

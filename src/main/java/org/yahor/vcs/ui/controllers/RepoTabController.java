@@ -26,15 +26,15 @@ public class RepoTabController implements Initializable {
 
     private Repo repo;
 
-    private Image tagIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/tag.png"));
-    private Image branchIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/branch.png"));
-    private Image remoteIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/remote.png"));
-    private Image singleRemoteIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/server.png"));
-    private Image localIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/local.png"));
-    private Image tagsIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/tags.png"));
-    private Image folderIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/folder.png"));
+    private final Image tagIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/tag.png"));
+    private final Image branchIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/branch.png"));
+    private final Image remoteIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/remote.png"));
+    private final Image singleRemoteIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/server.png"));
+    private final Image localIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/local.png"));
+    private final Image tagsIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/tags.png"));
+    private final Image folderIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/folder.png"));
 
-    public void loadRepo(Repo repository) throws GitAPIException {
+    public void loadRepo(Repo repository) {
         this.repo = repository;
         showBranches();
     }

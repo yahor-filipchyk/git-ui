@@ -86,11 +86,7 @@ public class MainStageController implements Initializable, Observer {
             tabPane.getSelectionModel().select(newTab);
 //            tabPane.set
             System.out.println("Added new tab");
-            try {
-                ((RepoTabController) gridPaneWithController.getValue()).loadRepo(new Repo(repository));
-            } catch (GitAPIException e) {
-                e.printStackTrace();
-            }
+            ((RepoTabController) gridPaneWithController.getValue()).loadRepo(new Repo(repository));
         } catch (IOException e) {
             e.printStackTrace();
         }
