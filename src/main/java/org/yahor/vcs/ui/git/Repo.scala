@@ -3,9 +3,9 @@ package org.yahor.vcs.ui.git
 import javafx.scene.control.TreeItem
 import javafx.scene.image.Image
 
-import org.eclipse.jgit.lib.Repository
-import org.eclipse.jgit.lib.Constants
+import org.eclipse.jgit.lib.{Constants, Repository}
 import org.yahor.vcs.ui.utils.FXUtils
+
 import scala.collection.JavaConversions._
 
 class Repo(val repo: Repository) {
