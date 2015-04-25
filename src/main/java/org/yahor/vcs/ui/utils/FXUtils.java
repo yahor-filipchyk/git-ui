@@ -49,12 +49,13 @@ public final class FXUtils {
         return Color.web(bundle.getString(key));
     }
 
-    public static TreeItem<String> createTreeItemWithIcon(String label, Image icon, int imageHeight) {
+    public static TreeItem<String> createTreeItemWithIcon(String label, Image icon, int imageHeight, boolean expanded) {
         TreeItem<String> treeItem = new TreeItem<>(label);
         ImageView imageView = new ImageView(icon);
         imageView.setPreserveRatio(true);
         imageView.setFitHeight(imageHeight);
         treeItem.setGraphic(imageView);
+        treeItem.setExpanded(expanded);
         return treeItem;
     }
 }

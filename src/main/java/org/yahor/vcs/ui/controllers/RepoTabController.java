@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.yahor.vcs.ui.git.Repo;
@@ -28,6 +29,7 @@ public class RepoTabController implements Initializable {
     private Image tagIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/tag.png"));
     private Image branchIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/branch.png"));
     private Image remoteIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/remote.png"));
+    private Image singleRemoteIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/server.png"));
     private Image localIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/local.png"));
     private Image tagsIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/tags.png"));
     private Image folderIcon = new Image(getClass().getClassLoader().getResourceAsStream("images/folder.png"));
@@ -43,26 +45,27 @@ public class RepoTabController implements Initializable {
     }
 
     private void showBranches() {
-        TreeItem<String> localBranches = FXUtils.createTreeItemWithIcon("Branches", localIcon, 16);
-        TreeItem<String> remotes = FXUtils.createTreeItemWithIcon("Remotes", remoteIcon, 16);
-        TreeItem<String> tags = FXUtils.createTreeItemWithIcon("Tags", tagsIcon, 16);
-        localBranches.setExpanded(true);
-        remotes.setExpanded(true);
-        tags.setExpanded(true);
-        repo.tags().forEach(tag -> addRefToTree(tags, tag, tagIcon));
+        TreeItem<String> localBranches = FXUtils.createTreeItemWithIcon(Repo.Branches(), localIcon, 16, true);
+        TreeItem<String> remotes = FXUtils.createTreeItemWithIcon(Repo.Remotes(), remoteIcon, 16, true);
+        TreeItem<String> tags = FXUtils.createTreeItemWithIcon(Repo.Tags(), tagsIcon, 16, true);
+        repo.tags().forEach(tag ->
+                tags.getChildren()
+                        .add(FXUtils.createTreeItemWithIcon(Repository.shortenRefName(tag), tagIcon, 10, false)));
         Map<String, Tree> branches = repo.branches();
-        Repo.addFoldersAndBranches(localBranches, branches.get(Repo.BRANCHES()), folderIcon, branchIcon);
-        Repo.addFoldersAndBranches(remotes, branches.get(Repo.REMOTES()), folderIcon, branchIcon);
-        remotes.getChildren().forEach(item -> item.setExpanded(true));
-        TreeItem<String> refs = new TreeItem<>("Refs");
+        Repo.addFoldersAndBranches(localBranches, branches.get(Repo.Branches()), folderIcon, branchIcon);
+        Repo.addFoldersAndBranches(remotes, branches.get(Repo.Remotes()), folderIcon, branchIcon);
+        // expanding root folders in remotes (e.g. origin) and changing icon
+        remotes.getChildren().forEach(item -> {
+            item.setExpanded(true);
+            ImageView remoteServerIcon = new ImageView(singleRemoteIcon);
+            remoteServerIcon.setFitHeight(15);
+            item.setGraphic(remoteServerIcon);
+        });
+        TreeItem<String> refs = new TreeItem<>(Repo.Refs());
         refs.setExpanded(true);
         refs.getChildren().add(localBranches);
         refs.getChildren().add(remotes);
         refs.getChildren().add(tags);
         this.refs.setRoot(refs);
-    }
-
-    private static void addRefToTree(TreeItem<String> tree, String refName, Image icon) {
-        tree.getChildren().add(FXUtils.createTreeItemWithIcon(Repository.shortenRefName(refName), icon, 10));
     }
 }
