@@ -5,16 +5,101 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="151.0"
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="188.0"
          prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
          xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.yahor.vcs.ui.controllers.OpenDialogController">
     <tabs>
-        <Tab text="%dialog.open.tab.clone">
+        <Tab fx:id="tabClone" onSelectionChanged="#addingTypeChanged" text="%dialog.open.tab.clone">
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                <GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="120.0" prefWidth="120.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="50.0" minHeight="30.0" prefHeight="50.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="35.0" minHeight="30.0" prefHeight="35.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="35.0" minHeight="30.0" prefHeight="35.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="35.0" minHeight="30.0" prefHeight="35.0" vgrow="NEVER"/>
+                    </rowConstraints>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0"
+                              GridPane.columnSpan="2147483647">
+                            <children>
+                                <Label text="%dialog.open.label.url">
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <TextField HBox.hgrow="ALWAYS" fx:id="url">
+                                    <HBox.margin>
+                                        <Insets left="10.0" right="10.0"/>
+                                    </HBox.margin>
+                                </TextField>
+                            </children>
+                            <GridPane.margin>
+                                <Insets top="10.0"/>
+                            </GridPane.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0"
+                              GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                            <children>
+                                <Label text="%dialog.open.label.destination">
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <TextField HBox.hgrow="ALWAYS" disable="true" fx:id="destinationPath">
+                                    <HBox.margin>
+                                        <Insets left="10.0" right="10.0"/>
+                                    </HBox.margin>
+                                </TextField>
+                                <Button mnemonicParsing="false" onAction="#browseTargetPath"
+                                        text="%dialog.open.button.browse">
+                                    <HBox.margin>
+                                        <Insets right="10.0"/>
+                                    </HBox.margin>
+                                </Button>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1"
+                              GridPane.rowIndex="3">
+                            <children>
+                                <Button disable="true" minWidth="60.0" mnemonicParsing="false" fx:id="cloneRepoBtn"
+                                        text="%dialog.open.button.add" onAction="#confirmCloneRepo"/>
+                                <Button cancelButton="true" minWidth="60.0" mnemonicParsing="false"
+                                        onAction="#cancelAddRepo" text="%dialog.open.button.cancel">
+                                    <HBox.margin>
+                                        <Insets left="10.0" right="10.0"/>
+                                    </HBox.margin>
+                                </Button>
+                            </children>
+                        </HBox>
+                        <Label fx:id="cloneStatusLabel" maxWidth="1000.0" prefWidth="1000.0" GridPane.rowIndex="3">
+                            <GridPane.margin>
+                                <Insets left="10.0" right="10.0"/>
+                            </GridPane.margin>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0"
+                              GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                            <children>
+                                <Label text="%dialog.open.label.repo_name">
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <TextField HBox.hgrow="ALWAYS" fx:id="cloningRepoName">
+                                    <HBox.margin>
+                                        <Insets left="10.0" right="10.0"/>
+                                    </HBox.margin>
+                                </TextField>
+                            </children>
+                        </HBox>
+                    </children>
+                </GridPane>
             </content>
         </Tab>
-        <Tab text="%dialog.open.tab.open">
+        <Tab fx:id="tabOpen" onSelectionChanged="#addingTypeChanged" text="%dialog.open.tab.open">
             <content>
                 <GridPane>
                     <columnConstraints>
@@ -38,7 +123,7 @@
                                         <Insets left="10.0"/>
                                     </HBox.margin>
                                 </Label>
-                                <TextField fx:id="workingCopyPath" HBox.hgrow="ALWAYS">
+                                <TextField fx:id="workingCopyPath" HBox.hgrow="ALWAYS" disable="true">
                                     <HBox.margin>
                                         <Insets left="5.0" right="10.0"/>
                                     </HBox.margin>
@@ -65,7 +150,7 @@
                                         <Insets left="10.0"/>
                                     </HBox.margin>
                                 </Label>
-                                <TextField fx:id="repoName" HBox.hgrow="ALWAYS">
+                                <TextField fx:id="addingRepoName" HBox.hgrow="ALWAYS">
                                     <HBox.margin>
                                         <Insets left="5.0" right="10.0"/>
                                     </HBox.margin>
@@ -77,20 +162,20 @@
                         </HBox>
                         <Label fx:id="openStatusLabel" maxWidth="1000.0" prefWidth="1000.0" GridPane.rowIndex="2">
                             <GridPane.margin>
-                                <Insets left="10.0"/>
+                                <Insets left="10.0" right="10.0"/>
                             </GridPane.margin>
                         </Label>
                         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1"
                               GridPane.rowIndex="2">
                             <children>
-                                <Button minWidth="60.0" mnemonicParsing="false" onAction="#confirmAddRepo"
-                                        text="%dialog.open.button.add" disable="true" fx:id="openRepoBtn">
+                                <Button fx:id="openRepoBtn" disable="true" minWidth="60.0" mnemonicParsing="false"
+                                        onAction="#confirmAddRepo" text="%dialog.open.button.add">
                                     <HBox.margin>
-                                        <Insets left="5.0"/>
+                                        <Insets/>
                                     </HBox.margin>
                                 </Button>
-                                <Button minWidth="60.0" mnemonicParsing="false" onAction="#cancelAddRepo"
-                                        text="%dialog.open.button.cancel">
+                                <Button cancelButton="true" minWidth="60.0" mnemonicParsing="false"
+                                        onAction="#cancelAddRepo" text="%dialog.open.button.cancel">
                                     <HBox.margin>
                                         <Insets left="10.0" right="10.0"/>
                                     </HBox.margin>
@@ -101,7 +186,7 @@
                 </GridPane>
             </content>
         </Tab>
-        <Tab text="%dialog.open.tab.create">
+        <Tab fx:id="tabCreate" onSelectionChanged="#addingTypeChanged" text="%dialog.open.tab.create">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
             </content>

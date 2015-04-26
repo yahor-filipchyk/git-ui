@@ -5,8 +5,21 @@ import java.io.File;
 /**
  * @author yfilipchyk
  */
-public interface RepoAddedEvent {
+public class RepoAddedEvent implements RepoEvent {
 
-    File getRepoDir();
-    String getRepoName();
+    private File repoDir;
+    private String repoName;
+
+    public RepoAddedEvent(File repoDir, String repoName) {
+        this.repoDir = repoDir;
+        this.repoName = repoName;
+    }
+
+    public File getRepoDir() {
+        return repoDir;
+    }
+
+    public String getRepoName() {
+        return repoName;
+    }
 }

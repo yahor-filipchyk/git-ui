@@ -2,8 +2,6 @@ package org.yahor.vcs.ui.controllers;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -13,12 +11,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Pair;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.yahor.vcs.ui.ApplicationRunner;
 import org.yahor.vcs.ui.events.RepoAddedEvent;
+import org.yahor.vcs.ui.events.RepoClonedEvent;
 import org.yahor.vcs.ui.git.Repo;
 import org.yahor.vcs.ui.utils.FXUtils;
 import org.yahor.vcs.ui.utils.Language;
@@ -44,12 +41,16 @@ public class MainStageController implements Initializable, Observer {
 
     @FXML
     public void open(ActionEvent event) throws IOException {
-        Stage stage = new Stage();
+        Stage stage = new Stage(StageStyle.UTILITY);
         stage.setTitle(bundle.getString(OPEN_DIALOG_TITLE));
-        Pair<Parent, Observable> sceneWithController = FXUtils.loadPaneWithController(OPEN_DIALOG_FILE, bundle);
+        Pair<Parent, ObservableController> sceneWithController = FXUtils.loadPaneWithController(OPEN_DIALOG_FILE, bundle);
         stage.setScene(new Scene(sceneWithController.getKey()));
-        sceneWithController.getValue().addObserver(this);
+        stage.setResizable(false);
+        stage.setAlwaysOnTop(true);
         stage.show();
+        ((OpenDialogController) sceneWithController.getValue()).baseHeight = stage.getHeight();
+        sceneWithController.getValue().addListener(RepoAddedEvent.class, this::addRepo);
+        sceneWithController.getValue().addListener(RepoClonedEvent.class, this::cloneRepo);
     }
 
     @FXML
@@ -69,19 +70,32 @@ public class MainStageController implements Initializable, Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        RepoAddedEvent event = (RepoAddedEvent) arg;
+    public void update(Observable o, Object event) {
+        if (event != null) {
+            if (event.getClass() == RepoAddedEvent.class) {
+                addRepo((RepoAddedEvent) event);
+            } else if (event.getClass() == RepoClonedEvent.class) {
+                cloneRepo((RepoClonedEvent) event);
+            }
+        }
+    }
+
+    private void cloneRepo(RepoClonedEvent event) {
+        Repo repo = Repo.cloneRepo(event.getUrl(), event.getDestinationDir());
+        addNewTab(repo, event.getRepoName());
+    }
+
+    private void addRepo(RepoAddedEvent event) {
+        Repo repo = Repo.openRepo(event.getRepoDir());
+        addNewTab(repo, event.getRepoName());
+    }
+
+    private void addNewTab(Repo repo, String repoName) {
         try {
-            FileRepositoryBuilder builder = new FileRepositoryBuilder();
-            Repository repository = builder.setGitDir(event.getRepoDir())
-                    .readEnvironment() // scan environment GIT_* variables
-                    .findGitDir() // scan up the file system tree
-                    .build();
-            Repo repo = new Repo(repository);
             Pair gridPaneWithController = FXUtils.loadPaneWithController(PROJECT_TAB_FILE, bundle);
-            Tab newTab = new Tab(event.getRepoName());
+            Tab newTab = new Tab(repoName);
             newTab.setOnCloseRequest(closeEvent -> {
-               // TODO implement showing confirmation dialog
+                // TODO implement showing confirmation dialog
             });
             newTab.setOnClosed(closedEvent -> repo.close());
             GridPane gridPane = (GridPane) gridPaneWithController.getKey();

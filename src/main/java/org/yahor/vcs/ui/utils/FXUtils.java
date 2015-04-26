@@ -9,9 +9,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.yahor.vcs.ui.controllers.ObservableController;
 
 import java.io.IOException;
-import java.util.Observable;
 import java.util.ResourceBundle;
 
 /**
@@ -28,7 +28,7 @@ public final class FXUtils {
         return loader.load(FXUtils.class.getClassLoader().getResourceAsStream(fxmlPath));
     }
 
-    public static Pair<Parent, Observable> loadPaneWithController(String fxmlPath,
+    public static Pair<Parent, ObservableController> loadPaneWithController(String fxmlPath,
                                                                   ResourceBundle resources) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(resources);
