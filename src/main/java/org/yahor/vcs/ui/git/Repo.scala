@@ -40,20 +40,35 @@ object Repo {
   val Remotes = "Remotes"
   val Tags = "Tags"
 
+  def createRepo(dir: File): Repo = {
+    val git = Git.init()
+      .setDirectory(dir)
+      .call()
+    new Repo(git.getRepository)
+  }
+
   def openRepo(dir: File): Repo = {
-    val builder: FileRepositoryBuilder = new FileRepositoryBuilder
-    val repository: Repository = builder.setGitDir(dir).readEnvironment.findGitDir.build
+    val builder = new FileRepositoryBuilder
+    val repository = builder.setGitDir(dir)
+      .readEnvironment()
+      .findGitDir()
+      .build()
     new Repo(repository)
   }
 
   def cloneRepo(url: String, dir: File): Repo = {
     val newFolder = new File(dir, repoName(url))
     newFolder.mkdir()
-    new Repo(Git.cloneRepository().setURI(url).setDirectory(newFolder).call().getRepository)
+    val git = Git.cloneRepository()
+      .setURI(url)
+      .setDirectory(newFolder)
+      .call()
+    new Repo(git.getRepository)
   }
 
   def repoName(url: String): String = {
-    if (!url.contains("/")) url
+    if (!url.contains("/"))
+      url
     else {
       val name = url.substring(url.lastIndexOf('/') + 1)
       if (name endsWith ".git") name.substring(0, name.length - ".git".length)
@@ -61,15 +76,17 @@ object Repo {
     }
   }
 
-  def addFoldersAndBranches(rootTreeItem: TreeItem[String], tree: Tree, folderIcon: Image, branchIcon: Image) {
+  def addFoldersAndBranches(rootTreeItem: TreeItem[String], tree: Tree, folderIcon: Image, branchIcon: Image): Unit =
     tree match {
       case Tree("", children) => children.foreach(t => addFoldersAndBranches(rootTreeItem, t, folderIcon, branchIcon))
-      case Tree(label, List()) =>
+      case Tree(label, List()) => {
         rootTreeItem.getChildren.add(FXUtils.createTreeItemWithIcon(label, branchIcon, 10, false))
-      case Tree(label, children) if children.nonEmpty =>
+      }
+      case Tree(label, children) if children.nonEmpty => {
         val folderItem = FXUtils.createTreeItemWithIcon(label, folderIcon, 15, false)
         children.foreach(t => addFoldersAndBranches(folderItem, t, folderIcon, branchIcon))
         rootTreeItem.getChildren.add(folderItem)
+      }
     }
-  }
+
 }

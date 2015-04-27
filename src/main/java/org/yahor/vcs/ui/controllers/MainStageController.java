@@ -22,14 +22,12 @@ import org.yahor.vcs.ui.utils.Language;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
 /**
  * @author yahor-filipchyk
  */
-public class MainStageController implements Initializable, Observer {
+public class MainStageController implements Initializable {
 
     private static final String OPEN_DIALOG_FILE = "views/open_dialog.fxml";
     private static final String PROJECT_TAB_FILE = "views/project_tab.fxml";
@@ -69,25 +67,14 @@ public class MainStageController implements Initializable, Observer {
         bundle = resources;
     }
 
-    @Override
-    public void update(Observable o, Object event) {
-        if (event != null) {
-            if (event.getClass() == RepoAddedEvent.class) {
-                addRepo((RepoAddedEvent) event);
-            } else if (event.getClass() == RepoClonedEvent.class) {
-                cloneRepo((RepoClonedEvent) event);
-            }
-        }
-    }
-
     private void cloneRepo(RepoClonedEvent event) {
-        Repo repo = Repo.cloneRepo(event.getUrl(), event.getDestinationDir());
-        addNewTab(repo, event.getRepoName());
+        Repo repo = Repo.cloneRepo(event.url(), event.destinationDir());
+        addNewTab(repo, event.repoName());
     }
 
     private void addRepo(RepoAddedEvent event) {
-        Repo repo = Repo.openRepo(event.getRepoDir());
-        addNewTab(repo, event.getRepoName());
+        Repo repo = Repo.openRepo(event.repoDir());
+        addNewTab(repo, event.repoName());
     }
 
     private void addNewTab(Repo repo, String repoName) {
