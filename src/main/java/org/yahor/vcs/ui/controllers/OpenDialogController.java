@@ -17,6 +17,7 @@ import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.util.FS;
 import org.yahor.vcs.ui.events.RepoAddedEvent;
 import org.yahor.vcs.ui.events.RepoClonedEvent;
+import org.yahor.vcs.ui.events.RepoCreatedEvent;
 import org.yahor.vcs.ui.git.Repo;
 import org.yahor.vcs.ui.utils.FXUtils;
 
@@ -59,11 +60,16 @@ public class OpenDialogController extends ObservableController implements Initia
 
     // Create tab
     @FXML private Tab tabCreate;
+    @FXML private TextField newRepoDestinationPath;
+    @FXML private TextField creatingRepoName;
+    @FXML private Label createStatusLabel;
+    @FXML private Button createRepoBtn;
 
     private ResourceBundle bundle;
     private final DirectoryChooser directoryChooser = new DirectoryChooser();
     private File workingCopyDir;
     private File cloningDestinationDir;
+    private File creatingDestinationDir;
 
     double baseHeight;
 
@@ -87,13 +93,13 @@ public class OpenDialogController extends ObservableController implements Initia
 
     @FXML
     public void browseTargetPath(ActionEvent event) {
-        File dir = directoryChooser.showDialog(FXUtils.getStage(workingCopyPath));
+        File dir = directoryChooser.showDialog(FXUtils.getStage(destinationPath));
         if (dir == null) {
             return;
         }
         destinationPath.setText(dir.getAbsolutePath());
         cloningDestinationDir = dir;
-        updateCloneStatus("Repo will be saved to folder " + dir.getName(), getColor(COLOR_SUCCESS));
+        updateLabelMessage(cloneStatusLabel, "Repo will be saved to folder " + dir.getName(), getColor(COLOR_SUCCESS));
         if (isNotEmpty(url.getText())) {
             cloneRepoBtn.setDisable(false);
         }
@@ -109,15 +115,27 @@ public class OpenDialogController extends ObservableController implements Initia
         workingCopyPath.setText(dir.getAbsolutePath());
         Path gitFolder = Paths.get(dir.getAbsolutePath(), ".git");
         if (!Files.exists(gitFolder)) {
-            updateOpenStatus(bundle.getString(DIALOG_STATUS_NO_REPO), getColor(COLOR_ERROR));
+            updateLabelMessage(openStatusLabel, bundle.getString(DIALOG_STATUS_NO_REPO), getColor(COLOR_ERROR));
         } else if (!RepositoryCache.FileKey.isGitRepository(gitFolder.toFile(), FS.detect())) {
-            updateOpenStatus(bundle.getString(DIALOG_STATUS_NOT_VALID_REPO), getColor(COLOR_ERROR));
+            updateLabelMessage(openStatusLabel, bundle.getString(DIALOG_STATUS_NOT_VALID_REPO), getColor(COLOR_ERROR));
         } else {    // success
-            updateOpenStatus(bundle.getString(DIALOG_STATUS_HAS_REPO), getColor(COLOR_SUCCESS));
+            updateLabelMessage(openStatusLabel, bundle.getString(DIALOG_STATUS_HAS_REPO), getColor(COLOR_SUCCESS));
             addingRepoName.setText(dir.getName());
             openRepoBtn.setDisable(false);
             workingCopyDir = gitFolder.toFile();
         }
+    }
+
+    @FXML public void browseNewRepoPath(ActionEvent event) {
+        File dir = directoryChooser.showDialog(FXUtils.getStage(newRepoDestinationPath));
+        if (dir == null) {
+            return;
+        }
+        newRepoDestinationPath.setText(dir.getAbsolutePath());
+        creatingRepoName.setText(dir.getName());
+        updateLabelMessage(createStatusLabel, "Repo will be saved to folder " + dir.getName(), getColor(COLOR_SUCCESS));
+        createRepoBtn.setDisable(false);
+        creatingDestinationDir = dir;
     }
 
     @FXML
@@ -139,6 +157,15 @@ public class OpenDialogController extends ObservableController implements Initia
     }
 
     @FXML
+    public void confirmCreateRepo(ActionEvent event) {
+        if (creatingDestinationDir != null) {
+            Stage currentStage = FXUtils.getStage(newRepoDestinationPath);
+            notifyListeners(new RepoCreatedEvent(creatingDestinationDir, creatingRepoName.getText()));
+            currentStage.close();
+        }
+    }
+
+    @FXML
     public void cancelAddRepo(ActionEvent event) {
         FXUtils.getStage(workingCopyPath).close();
     }
@@ -149,20 +176,14 @@ public class OpenDialogController extends ObservableController implements Initia
         this.url.textProperty().addListener(this::urlChanged);
     }
 
-    public void urlChanged(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+    private void urlChanged(ObservableValue<? extends String> observable, String oldValue, String newValue) {
         if (isNotEmpty(newValue)) {
-            if (newValue.contains("/")) {
-                cloningRepoName.setText(Repo.repoName(newValue));
-            }
+            cloningRepoName.setText(Repo.repoName(newValue));
         }
     }
 
-    private void updateOpenStatus(String message, Color color) {
-        showMessage(openStatusLabel, message, color);
-    }
-
-    private void updateCloneStatus(String message, Color color) {
-        showMessage(cloneStatusLabel, message, color);
+    private void updateLabelMessage(Label label, String message, Color color) {
+        showMessage(label, message, color);
     }
 
     private Color getColor(String key) {

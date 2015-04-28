@@ -16,6 +16,7 @@ import javafx.util.Pair;
 import org.yahor.vcs.ui.ApplicationRunner;
 import org.yahor.vcs.ui.events.RepoAddedEvent;
 import org.yahor.vcs.ui.events.RepoClonedEvent;
+import org.yahor.vcs.ui.events.RepoCreatedEvent;
 import org.yahor.vcs.ui.git.Repo;
 import org.yahor.vcs.ui.utils.FXUtils;
 import org.yahor.vcs.ui.utils.Language;
@@ -49,6 +50,7 @@ public class MainStageController implements Initializable {
         ((OpenDialogController) sceneWithController.getValue()).baseHeight = stage.getHeight();
         sceneWithController.getValue().addListener(RepoAddedEvent.class, this::addRepo);
         sceneWithController.getValue().addListener(RepoClonedEvent.class, this::cloneRepo);
+        sceneWithController.getValue().addListener(RepoCreatedEvent.class, this::createRepo);
     }
 
     @FXML
@@ -74,6 +76,11 @@ public class MainStageController implements Initializable {
 
     private void addRepo(RepoAddedEvent event) {
         Repo repo = Repo.openRepo(event.repoDir());
+        addNewTab(repo, event.repoName());
+    }
+
+    private void createRepo(RepoCreatedEvent event) {
+        Repo repo = Repo.createRepo(event.repoDir());
         addNewTab(repo, event.repoName());
     }
 

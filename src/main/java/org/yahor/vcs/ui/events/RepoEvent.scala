@@ -9,4 +9,6 @@ sealed trait RepoEvent
 
 case class RepoAddedEvent(repoDir: File, repoName: String) extends RepoEvent
 
+case class RepoCreatedEvent(repoDir: File, repoName: String) extends RepoEvent
+
 case class RepoClonedEvent(url: String, destinationDir: File, repoName: String) extends RepoEvent
