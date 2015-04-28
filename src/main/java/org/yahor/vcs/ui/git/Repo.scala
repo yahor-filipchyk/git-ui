@@ -15,6 +15,10 @@ class Repo(val repo: Repository) {
 
   import Repo._
 
+  private def git() = new Git(repo)
+
+  private def status() = git().status().call()
+
   def close(): Unit = repo.close()
 
   def tags: java.util.List[String] = repo.getTags.entrySet().map(_.getKey).toList.sorted
@@ -31,6 +35,18 @@ class Repo(val repo: Repository) {
     }
     Map(Branches -> heads, Remotes -> remotes)
   }
+
+  def createBranch(name: String): Unit = git().branchCreate().setName(name).call()
+
+  def deleteBranch(name: String): Unit = git().branchDelete().setBranchNames(name).call()
+
+  def changedFiles: java.util.Set[String] = status().getChanged
+
+  def addedFiles: java.util.Set[String] = status().getAdded
+
+  def modifiedFiles: java.util.Set[String] = status().getModified
+
+  def untrackedFiles: java.util.Set[String] = status().getUntracked
 }
 
 object Repo {
