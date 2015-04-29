@@ -4,7 +4,7 @@ import java.io.File
 import javafx.scene.control.TreeItem
 import javafx.scene.image.Image
 
-import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.api.{Status, StatusCommand, Git}
 import org.eclipse.jgit.lib.{Constants, Repository}
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import org.yahor.vcs.ui.utils.FXUtils
@@ -15,9 +15,18 @@ class Repo(val repo: Repository) {
 
   import Repo._
 
+  private var status: Status = null
+
   private def git() = new Git(repo)
 
-  private def status() = git().status().call()
+  private def statusCmd = git().status()
+
+  private def status(refresh: Boolean): Status = {
+    if (refresh || status == null) {
+      status = statusCmd.call()
+    }
+    status
+  }
 
   def close(): Unit = repo.close()
 
@@ -40,13 +49,15 @@ class Repo(val repo: Repository) {
 
   def deleteBranch(name: String): Unit = git().branchDelete().setBranchNames(name).call()
 
-  def changedFiles: java.util.Set[String] = status().getChanged
+  def changedFiles(refresh: Boolean): java.util.Set[String] = status(refresh).getChanged
 
-  def addedFiles: java.util.Set[String] = status().getAdded
+  def addedFiles(refresh: Boolean): java.util.Set[String] = status(refresh).getAdded
 
-  def modifiedFiles: java.util.Set[String] = status().getModified
+  def modifiedFiles(refresh: Boolean): java.util.Set[String] = status(refresh).getModified
 
-  def untrackedFiles: java.util.Set[String] = status().getUntracked
+  def untrackedFiles(refresh: Boolean): java.util.Set[String] = status(refresh).getUntracked
+
+  def conflictingFiles(refresh: Boolean): java.util.Set[String] = status(refresh).getConflicting
 }
 
 object Repo {
