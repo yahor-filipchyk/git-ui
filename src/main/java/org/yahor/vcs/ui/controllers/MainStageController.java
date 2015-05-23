@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToolBar;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -17,8 +18,8 @@ import org.yahor.vcs.ui.ApplicationRunner;
 import org.yahor.vcs.ui.events.RepoAddedEvent;
 import org.yahor.vcs.ui.events.RepoClonedEvent;
 import org.yahor.vcs.ui.events.RepoCreatedEvent;
-import org.yahor.vcs.ui.git.Repo;
-import org.yahor.vcs.ui.utils.FXUtils;
+import org.yahor.vcs.ui.services.RepoService;
+import org.yahor.vcs.ui.utils.Utils;
 import org.yahor.vcs.ui.utils.Language;
 
 import java.io.IOException;
@@ -37,12 +38,13 @@ public class MainStageController implements Initializable {
     private ResourceBundle bundle;
 
     @FXML private TabPane tabPane;
+    @FXML private ToolBar toolbar;
 
     @FXML
     public void open(ActionEvent event) throws IOException {
         Stage stage = new Stage(StageStyle.UTILITY);
         stage.setTitle(bundle.getString(OPEN_DIALOG_TITLE));
-        Pair<Parent, ObservableController> sceneWithController = FXUtils.loadPaneWithController(OPEN_DIALOG_FILE, bundle);
+        Pair<Parent, ObservableController> sceneWithController = Utils.loadPaneWithController(OPEN_DIALOG_FILE, bundle);
         stage.setScene(new Scene(sceneWithController.getKey()));
         stage.setResizable(false);
         stage.setAlwaysOnTop(true);
@@ -70,37 +72,47 @@ public class MainStageController implements Initializable {
     }
 
     private void cloneRepo(RepoClonedEvent event) {
-        Repo repo = Repo.cloneRepo(event.url(), event.destinationDir());
-        addNewTab(repo, event.repoName());
+        RepoService repoService = RepoService.cloneRepo(event.url(), event.destinationDir(), event.repoName());
+        addNewTab(repoService);
     }
 
     private void addRepo(RepoAddedEvent event) {
-        Repo repo = Repo.openRepo(event.repoDir());
-        addNewTab(repo, event.repoName());
+        RepoService repoService = RepoService.openRepo(event.repoDir(), event.repoName());
+        addNewTab(repoService);
     }
 
     private void createRepo(RepoCreatedEvent event) {
-        Repo repo = Repo.createRepo(event.repoDir());
-        addNewTab(repo, event.repoName());
+        RepoService repoService = RepoService.createRepo(event.repoDir(), event.repoName());
+        addNewTab(repoService);
     }
 
-    private void addNewTab(Repo repo, String repoName) {
+    private void disableInstruments() {
+
+    }
+
+    private void enableInstruments() {
+        toolbar.getItems().forEach(item -> item.setDisable(false));
+    }
+
+
+    private void addNewTab(RepoService repoService) {
         try {
-            Pair gridPaneWithController = FXUtils.loadPaneWithController(PROJECT_TAB_FILE, bundle);
-            Tab newTab = new Tab(repoName);
+            Pair gridPaneWithController = Utils.loadPaneWithController(PROJECT_TAB_FILE, bundle);
+            Tab newTab = new Tab(repoService.name());
             newTab.setOnCloseRequest(closeEvent -> {
                 // TODO implement showing confirmation dialog
             });
-            newTab.setOnClosed(closedEvent -> repo.close());
+            newTab.setOnClosed(closedEvent -> repoService.close());
             GridPane gridPane = (GridPane) gridPaneWithController.getKey();
             gridPane.prefHeightProperty().bind(tabPane.heightProperty().add(-30));
             gridPane.prefWidthProperty().bind(tabPane.widthProperty());
             newTab.setContent(gridPane);
             tabPane.getTabs().add(newTab);
             tabPane.getSelectionModel().select(newTab);
-            ((RepoTabController) gridPaneWithController.getValue()).loadRepo(repo);
+            ((RepoTabController) gridPaneWithController.getValue()).loadRepo(repoService);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        enableInstruments();
     }
 }

@@ -19,7 +19,7 @@ import org.yahor.vcs.ui.events.RepoAddedEvent;
 import org.yahor.vcs.ui.events.RepoClonedEvent;
 import org.yahor.vcs.ui.events.RepoCreatedEvent;
 import org.yahor.vcs.ui.git.Repo;
-import org.yahor.vcs.ui.utils.FXUtils;
+import org.yahor.vcs.ui.utils.Utils;
 
 import java.io.File;
 import java.net.URL;
@@ -29,7 +29,7 @@ import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import static org.codehaus.plexus.util.StringUtils.isNotEmpty;
-import static org.yahor.vcs.ui.utils.FXUtils.showMessage;
+import static org.yahor.vcs.ui.utils.Utils.showMessage;
 
 /**
  * @author yahor-filipchyk
@@ -93,7 +93,7 @@ public class OpenDialogController extends ObservableController implements Initia
 
     @FXML
     public void browseTargetPath(ActionEvent event) {
-        File dir = directoryChooser.showDialog(FXUtils.getStage(destinationPath));
+        File dir = directoryChooser.showDialog(Utils.getStage(destinationPath));
         if (dir == null) {
             return;
         }
@@ -108,7 +108,7 @@ public class OpenDialogController extends ObservableController implements Initia
     @FXML
     public void browseRepo(ActionEvent event) {
         directoryChooser.setTitle(bundle.getString(FOLDER_CHOOSER_TITLE));
-        File dir = directoryChooser.showDialog(FXUtils.getStage(workingCopyPath));
+        File dir = directoryChooser.showDialog(Utils.getStage(workingCopyPath));
         if (dir == null) {
             return;
         }
@@ -127,7 +127,7 @@ public class OpenDialogController extends ObservableController implements Initia
     }
 
     @FXML public void browseNewRepoPath(ActionEvent event) {
-        File dir = directoryChooser.showDialog(FXUtils.getStage(newRepoDestinationPath));
+        File dir = directoryChooser.showDialog(Utils.getStage(newRepoDestinationPath));
         if (dir == null) {
             return;
         }
@@ -141,8 +141,8 @@ public class OpenDialogController extends ObservableController implements Initia
     @FXML
     public void confirmCloneRepo(ActionEvent event) {
         if (cloningDestinationDir != null && isNotEmpty(url.getText())) {
-            Stage currentStage = FXUtils.getStage(destinationPath);
-            notifyListeners(new RepoClonedEvent(url.getText(), cloningDestinationDir, cloningRepoName.getText()));
+            Stage currentStage = Utils.getStage(destinationPath);
+            notifyListeners(new RepoClonedEvent(cloningDestinationDir, url.getText(), cloningRepoName.getText()));
             currentStage.close();
         }
     }
@@ -150,7 +150,7 @@ public class OpenDialogController extends ObservableController implements Initia
     @FXML
     public void confirmAddRepo(ActionEvent event) {
         if (workingCopyDir != null) {
-            Stage currentStage = FXUtils.getStage(workingCopyPath);
+            Stage currentStage = Utils.getStage(workingCopyPath);
             notifyListeners(new RepoAddedEvent(workingCopyDir, addingRepoName.getText()));
             currentStage.close();
         }
@@ -159,7 +159,7 @@ public class OpenDialogController extends ObservableController implements Initia
     @FXML
     public void confirmCreateRepo(ActionEvent event) {
         if (creatingDestinationDir != null) {
-            Stage currentStage = FXUtils.getStage(newRepoDestinationPath);
+            Stage currentStage = Utils.getStage(newRepoDestinationPath);
             notifyListeners(new RepoCreatedEvent(creatingDestinationDir, creatingRepoName.getText()));
             currentStage.close();
         }
@@ -167,7 +167,7 @@ public class OpenDialogController extends ObservableController implements Initia
 
     @FXML
     public void cancelAddRepo(ActionEvent event) {
-        FXUtils.getStage(workingCopyPath).close();
+        Utils.getStage(workingCopyPath).close();
     }
 
     @Override
@@ -187,6 +187,6 @@ public class OpenDialogController extends ObservableController implements Initia
     }
 
     private Color getColor(String key) {
-        return FXUtils.getColor(bundle, key);
+        return Utils.getColor(bundle, key);
     }
 }

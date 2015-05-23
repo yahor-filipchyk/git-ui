@@ -1,0 +1,7 @@
+.toolbar {
+    -fx-background-color: transparent;
+}
+
+.instrument {
+    -fx-border-radius: 0;
+}

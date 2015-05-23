@@ -11,21 +11,20 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import org.eclipse.jgit.lib.Repository;
 import org.yahor.vcs.ui.git.Repo;
-import org.yahor.vcs.ui.git.Tree;
 import org.yahor.vcs.ui.model.File;
-import org.yahor.vcs.ui.utils.FXUtils;
+import org.yahor.vcs.ui.services.RepoService;
+import org.yahor.vcs.ui.utils.Utils;
 
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
+import static org.yahor.vcs.ui.utils.Utils.concatLists;
 
 /**
  * @author yfilipchyk
@@ -42,7 +41,7 @@ public class RepoTabController implements Initializable {
     @FXML private TableColumn<File, ImageView> indexFileIcon;
     @FXML private TableColumn<File, String> indexFilePath;
 
-    private Repo repo;
+    private RepoService repoService;
 
     private final Image tagIcon = getImage("images/tag.png");
     private final Image branchIcon = getImage("images/branch.png");
@@ -55,8 +54,8 @@ public class RepoTabController implements Initializable {
     private final Image editedIcon = getImage("images/edited.png");
     private final Image untrackedIcon = getImage("images/untracked.png");
 
-    public void loadRepo(Repo repository) {
-        this.repo = repository;
+    public void loadRepo(RepoService repoService) {
+        this.repoService = repoService;
         showBranches();
         showFileStatuses();
     }
@@ -71,19 +70,16 @@ public class RepoTabController implements Initializable {
     }
 
     private void showBranches() {
-        TreeItem<String> localBranches = FXUtils.createTreeItemWithIcon(Repo.Branches(), localIcon, 16, true);
-        TreeItem<String> remotes = FXUtils.createTreeItemWithIcon(Repo.Remotes(), remoteIcon, 16, true);
-        TreeItem<String> tags = FXUtils.createTreeItemWithIcon(Repo.Tags(), tagsIcon, 16, true);
-        repo.tags().forEach(tag ->
-                tags.getChildren()
-                        .add(FXUtils.createTreeItemWithIcon(Repository.shortenRefName(tag), tagIcon, 10, false)));
-        Map<String, Tree> branches = repo.branches();
-        Repo.addFoldersAndBranches(localBranches, branches.get(Repo.Branches()), folderIcon, branchIcon);
-        Repo.addFoldersAndBranches(remotes, branches.get(Repo.Remotes()), folderIcon, branchIcon);
+        TreeItem<String> localBranches = Utils.createTreeItemWithIcon(Repo.Branches(), localIcon, 16, true);
+        TreeItem<String> remotes = Utils.createTreeItemWithIcon(Repo.Remotes(), remoteIcon, 16, true);
+        TreeItem<String> tags = Utils.createTreeItemWithIcon(Repo.Tags(), tagsIcon, 16, true);
+        tags.getChildren().addAll(repoService.tags(tagIcon));
+        localBranches.getChildren().addAll(repoService.localBranches(branchIcon, folderIcon));
+        remotes.getChildren().addAll(repoService.remoteBranches(branchIcon, folderIcon));
         // expanding root folders in remotes (e.g. origin) and changing icon
         remotes.getChildren().forEach(item -> {
             item.setExpanded(true);
-            item.setGraphic(createImageView(singleRemoteIcon, 15));
+            item.setGraphic(Utils.createImageView(singleRemoteIcon, 15));
         });
         TreeItem<String> refs = new TreeItem<>(Repo.Refs());
         refs.setExpanded(true);
@@ -94,47 +90,11 @@ public class RepoTabController implements Initializable {
     }
 
     private void showFileStatuses() {
-        // working copy files
-        List<File> modified = pathsToFiles(repo.modifiedFiles(false), editedIcon, 15);
-        List<File> untracked = pathsToFiles(repo.untrackedFiles(false), untrackedIcon, 15);
-        ObservableList<File> modifiedFiles = FXCollections.observableArrayList(concatLists(modified, untracked));
-        System.out.println(modifiedFiles);
-        workingCopyFiles.setItems(modifiedFiles);
-
-        // index files
-        List<File> changed = pathsToFiles(repo.changedFiles(false), editedIcon, 15);
-        List<File> newAdded = pathsToFiles(repo.addedFiles(false), null, 15);
-        List<File> conflicting = pathsToFiles(repo.conflictingFiles(false), null, 15);
-        ObservableList<File> changedFiles = FXCollections.observableArrayList(concatLists(changed, newAdded, conflicting));
-        System.out.println(changedFiles);
-        indexFiles.setItems(changedFiles);
-    }
-
-    private List<File> pathsToFiles(Collection<String> paths, Image icon, int imageHeight) {
-        return paths.stream()
-                .map(file -> new File(icon != null ? createImageView(icon, imageHeight) : null, file))
-                .collect(Collectors.toList());
+        workingCopyFiles.setItems(repoService.modifiedFiles(editedIcon, untrackedIcon));
+        indexFiles.setItems(repoService.changedFiles(editedIcon, null, null));
     }
 
     private Image getImage(String path) {
         return new Image(getClass().getClassLoader().getResourceAsStream(path));
-    }
-
-    private ImageView createImageView(Image icon, int height) {
-        ImageView imageView = new ImageView(icon);
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(height);
-        return imageView;
-    }
-
-    @SafeVarargs
-    private static <T> List<T> concatLists(List<T> list1, List<T> list2, List<T> ... otherLists) {
-        requireNonNull(list1);
-        requireNonNull(list2);
-        Stream<T> combining = Stream.concat(list1.stream(), list2.stream());
-        for (List<T> list : otherLists) {
-            combining = Stream.concat(combining, list.stream());
-        }
-        return combining.collect(Collectors.toList());
     }
 }

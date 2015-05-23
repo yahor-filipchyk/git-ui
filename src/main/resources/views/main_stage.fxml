@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.input.KeyCodeCombination?>
 <GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="689.0"
-          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          stylesheets="@/styles/main.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="org.yahor.vcs.ui.controllers.MainStageController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -14,6 +16,7 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="NEVER"/>
+        <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="NEVER"/>
         <RowConstraints maxHeight="5000.0" minHeight="10.0" prefHeight="5000.0" vgrow="ALWAYS"/>
         <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="NEVER"/>
     </rowConstraints>
@@ -22,11 +25,136 @@
             <menus>
                 <Menu mnemonicParsing="false" text="%menu.file">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#open" text="%menu.file.open"/>
-                        <MenuItem mnemonicParsing="false" onAction="#close" text="%menu.file.close"/>
+                        <MenuItem mnemonicParsing="false" onAction="#open" text="%menu.file.open">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                        <SeparatorMenuItem/>
+                        <MenuItem mnemonicParsing="false" onAction="#close" text="%menu.file.close">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="%menu.edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="%menu.edit.undo">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="%menu.edit.redo">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="Y" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="%menu.edit.copy">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="%menu.edit.paste">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="%menu.edit.cut">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="%menu.edit.delete">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="DELETE" control="UP" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="%menu.edit.select_all">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%menu.view">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="%menu.view.refresh">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="%menu.view.close_tab"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.view.close_except_current"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.view.next_tab">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="PAGE_DOWN" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="%menu.view.prev_tab">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="PAGE_UP" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="%menu.view.status_tab"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.view.log_tab"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.view.search_tab"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%menu.repo">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.settings"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.commit_all"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.commit_chosen"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.discard"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.stash"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.push"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.pull"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.fetch"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.checkout"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.branch"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.merge"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.rebase"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.tag"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.add_remote"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.delete_repo"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%menu.actions">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.open_in_explorer"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.compare_with_revision"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.create_patch"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.apply_patch"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.stage"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.unstage"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.ignore"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.continue_rebase"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.abort_repase"/>
+                        <Menu mnemonicParsing="false" text="%menu.actions.resolve_conflict">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="%menu.actions.resolve_conflict.accept_theirs"/>
+                                <MenuItem mnemonicParsing="false" text="%menu.actions.resolve_conflict.accept_ours"/>
+                                <MenuItem mnemonicParsing="false" text="%menu.actions.resolve_conflict.manual_merge"/>
+                                <MenuItem mnemonicParsing="false" text="%menu.actions.resolve_conflict.restart_merge"/>
+                            </items>
+                        </Menu>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.show_history"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.show_blame"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.actions.move_file"/>
+                    </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="%menu.options">
                     <items>
@@ -42,18 +170,170 @@
                 <Menu mnemonicParsing="false" text="%menu.help">
                     <items>
                         <MenuItem mnemonicParsing="false" text="%menu.help.about"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.help.notify_about_error"/>
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
         <Label maxHeight="20.0" minHeight="20.0" prefHeight="20.0" prefWidth="5000.0" text="%statusbar.initial"
-               GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+               GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
             <padding>
                 <Insets left="5.0"/>
             </padding>
         </Label>
         <TabPane fx:id="tabPane" prefHeight="5000.0" prefWidth="5000.0" tabClosingPolicy="ALL_TABS"
-                 GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                 GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
         </TabPane>
+        <ToolBar maxHeight="35.0" prefHeight="35.0" prefWidth="200.0" styleClass="toolbar" fx:id="toolbar"
+                 GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+            <items>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        onAction="#open">
+                    <tooltip>
+                        <Tooltip text="%menu.file.open"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/add_repo.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        styleClass="instrument" disable="true">
+                    <tooltip>
+                        <Tooltip text="%menu.repo.commit_all"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/commit.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        styleClass="instrument" disable="true">
+                    <tooltip>
+                        <Tooltip text="%menu.repo.checkout"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/checkout.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        styleClass="instrument" disable="true">
+                    <tooltip>
+                        <Tooltip text="%menu.repo.discard"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/discard.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        styleClass="instrument" disable="true">
+                    <tooltip>
+                        <Tooltip text="%menu.repo.stash"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/stash.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        styleClass="instrument" disable="true">
+                    <tooltip>
+                        <Tooltip text="%menu.repo.fetch"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/fetch.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        styleClass="instrument" disable="true">
+                    <tooltip>
+                        <Tooltip text="%menu.repo.pull"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/pull.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        styleClass="instrument" disable="true">
+                    <tooltip>
+                        <Tooltip text="%menu.repo.push"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/push.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        styleClass="instrument" disable="true">
+                    <tooltip>
+                        <Tooltip text="%menu.repo.branch"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/create_branch.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        styleClass="instrument" disable="true">
+                    <tooltip>
+                        <Tooltip text="%menu.repo.merge"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/merge.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        styleClass="instrument" disable="true">
+                    <tooltip>
+                        <Tooltip text="%menu.repo.tag"/>
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@/images/tag_instrument.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </items>
+            <GridPane.margin>
+                <Insets/>
+            </GridPane.margin>
+        </ToolBar>
     </children>
 </GridPane>

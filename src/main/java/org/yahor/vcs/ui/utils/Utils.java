@@ -12,27 +12,32 @@ import javafx.util.Pair;
 import org.yahor.vcs.ui.controllers.ObservableController;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author yahor-filipchyk
  */
-public final class FXUtils {
+public final class Utils {
 
-    private FXUtils() {
+    private Utils() {
     }
 
     public static Parent loadPane(String fxmlPath, ResourceBundle resources) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(resources);
-        return loader.load(FXUtils.class.getClassLoader().getResourceAsStream(fxmlPath));
+        return loader.load(Utils.class.getClassLoader().getResourceAsStream(fxmlPath));
     }
 
     public static Pair<Parent, ObservableController> loadPaneWithController(String fxmlPath,
                                                                   ResourceBundle resources) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(resources);
-        return new Pair<>(loader.load(FXUtils.class.getClassLoader().getResourceAsStream(fxmlPath)),
+        return new Pair<>(loader.load(Utils.class.getClassLoader().getResourceAsStream(fxmlPath)),
                 loader.getController());
     }
 
@@ -57,5 +62,23 @@ public final class FXUtils {
         treeItem.setGraphic(imageView);
         treeItem.setExpanded(expanded);
         return treeItem;
+    }
+
+    public static ImageView createImageView(Image icon, int height) {
+        ImageView imageView = new ImageView(icon);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(height);
+        return imageView;
+    }
+
+    @SafeVarargs
+    public static <T> List<T> concatLists(List<T> list1, List<T> list2, List<T> ... otherLists) {
+        requireNonNull(list1);
+        requireNonNull(list2);
+        Stream<T> combining = Stream.concat(list1.stream(), list2.stream());
+        for (List<T> list : otherLists) {
+            combining = Stream.concat(combining, list.stream());
+        }
+        return combining.collect(Collectors.toList());
     }
 }

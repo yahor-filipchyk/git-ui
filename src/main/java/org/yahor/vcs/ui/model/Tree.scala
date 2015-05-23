@@ -1,4 +1,4 @@
-package org.yahor.vcs.ui.git
+package org.yahor.vcs.ui.model
 
 /**
  * @author yahor-filipchyk

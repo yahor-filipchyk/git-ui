@@ -5,9 +5,11 @@ import javafx.scene.control.TreeItem
 import javafx.scene.image.Image
 
 import org.eclipse.jgit.api.{Status, StatusCommand, Git}
+import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.lib.{Constants, Repository}
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
-import org.yahor.vcs.ui.utils.FXUtils
+import org.yahor.vcs.ui.model.Tree
+import org.yahor.vcs.ui.utils.Utils
 
 import scala.collection.JavaConversions._
 
@@ -30,7 +32,7 @@ class Repo(val repo: Repository) {
 
   def close(): Unit = repo.close()
 
-  def tags: java.util.List[String] = repo.getTags.entrySet().map(_.getKey).toList.sorted
+  def tags: List[String] = repo.getTags.entrySet().map(_.getKey).toList.sorted
 
   def branches: java.util.Map[String, Tree] = {
     val heads = Tree("", List())
@@ -102,18 +104,4 @@ object Repo {
       else name
     }
   }
-
-  def addFoldersAndBranches(rootTreeItem: TreeItem[String], tree: Tree, folderIcon: Image, branchIcon: Image): Unit =
-    tree match {
-      case Tree("", children) => children.foreach(t => addFoldersAndBranches(rootTreeItem, t, folderIcon, branchIcon))
-      case Tree(label, List()) => {
-        rootTreeItem.getChildren.add(FXUtils.createTreeItemWithIcon(label, branchIcon, 10, false))
-      }
-      case Tree(label, children) if children.nonEmpty => {
-        val folderItem = FXUtils.createTreeItemWithIcon(label, folderIcon, 15, false)
-        children.foreach(t => addFoldersAndBranches(folderItem, t, folderIcon, branchIcon))
-        rootTreeItem.getChildren.add(folderItem)
-      }
-    }
-
 }
