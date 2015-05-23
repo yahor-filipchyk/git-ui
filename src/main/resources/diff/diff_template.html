@@ -3,12 +3,69 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
+    <style>
+
+        .diff-container {
+            width: 100%;
+            border-left: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+        }
+
+        .header {
+            height: 25px;
+            background-color: #eee;
+            padding-top: 8px;
+            padding-left: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .contents-container {
+            border-bottom: 1px solid #ccc;
+        }
+
+        .line-number, source {
+            float: left;
+            font-size: 14px;
+        }
+
+        .line-number {
+            font-size: 12px;
+            width: 76px;
+            background-color: #eee;
+            border-right: 1px solid #ccc;
+            clear: left;
+            padding-left: 4px;
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        .removed {
+            background-color: #fee8e9;
+        }
+
+        .added {
+            background-color: #dfd;
+        }
+
+        .source {
+            padding-left: 85px;
+        }
+
+        pre {
+            margin: 0;
+        }
+
+        .right {
+            float: right;
+            padding-right: 4px;
+        }
+    </style>
 </head>
 <body>
 <div class="diff-container">
     <div class="header">{header}</div>
     <div class="contents-container">
-        <div class></div>
+        {lines}
     </div>
 </div>
 </body>
