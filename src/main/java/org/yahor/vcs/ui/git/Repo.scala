@@ -1,13 +1,15 @@
 package org.yahor.vcs.ui.git
 
-import java.io.File
+import java.io.{ByteArrayOutputStream, StringWriter, BufferedOutputStream, File}
 import javafx.scene.control.TreeItem
 import javafx.scene.image.Image
 
 import org.eclipse.jgit.api.{Status, StatusCommand, Git}
 import org.eclipse.jgit.diff.DiffFormatter
-import org.eclipse.jgit.lib.{Constants, Repository}
+import org.eclipse.jgit.lib.{ObjectId, Constants, Repository}
+import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
+import org.eclipse.jgit.treewalk.{FileTreeIterator, CanonicalTreeParser, AbstractTreeIterator}
 import org.yahor.vcs.ui.model.Tree
 import org.yahor.vcs.ui.utils.Utils
 
@@ -60,6 +62,21 @@ class Repo(val repo: Repository) {
   def untrackedFiles(refresh: Boolean): java.util.Set[String] = status(refresh).getUntracked
 
   def conflictingFiles(refresh: Boolean): java.util.Set[String] = status(refresh).getConflicting
+
+  def diffAgainstLatest(file: String): String = {
+    val outStream = new ByteArrayOutputStream()
+    val formatter = new DiffFormatter(outStream)
+    formatter.setRepository(repo)
+    val commitTreeIterator = prepareTreeParser(repo, Constants.HEAD)
+    val workTreeIterator = new FileTreeIterator(repo)
+    val diffEntries = formatter.scan(commitTreeIterator, workTreeIterator)
+    diffEntries.filter(entry => file == entry.getNewPath).foreach(formatter.format)
+    try {
+      outStream.toString("utf-8")
+    } finally {
+      outStream.close()
+    }
+  }
 }
 
 object Repo {
@@ -103,5 +120,20 @@ object Repo {
       if (name endsWith ".git") name.substring(0, name.length - ".git".length)
       else name
     }
+  }
+
+  def prepareTreeParser(repo: Repository, objectId: String): AbstractTreeIterator = {
+    val walk = new RevWalk(repo)
+    val commit = walk.parseCommit(ObjectId.fromString(objectId))
+    val tree = walk.parseTree(commit.getTree.getId)
+    val oldTreeParser = new CanonicalTreeParser()
+    val oldReader = repo.newObjectReader()
+    try {
+      oldTreeParser.reset(oldReader, tree.getId)
+    } finally {
+      oldReader.release()
+    }
+    walk.dispose()
+    oldTreeParser
   }
 }
