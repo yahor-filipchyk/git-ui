@@ -18,6 +18,7 @@ import org.eclipse.jgit.util.FS;
 import org.yahor.vcs.ui.events.RepoAddedEvent;
 import org.yahor.vcs.ui.events.RepoClonedEvent;
 import org.yahor.vcs.ui.events.RepoCreatedEvent;
+import org.yahor.vcs.ui.events.RepoEvent;
 import org.yahor.vcs.ui.git.Repo;
 import org.yahor.vcs.ui.utils.Utils;
 
@@ -34,7 +35,7 @@ import static org.yahor.vcs.ui.utils.Utils.showMessage;
 /**
  * @author yahor-filipchyk
  */
-public class OpenDialogController extends ObservableController implements Initializable {
+public class OpenDialogController extends BaseDialogController {
 
     private static final String FOLDER_CHOOSER_TITLE = "dialog.choose_repo.title";
     private static final String DIALOG_STATUS_NO_REPO = "dialog.status.no_repo";
@@ -138,35 +139,31 @@ public class OpenDialogController extends ObservableController implements Initia
         creatingDestinationDir = dir;
     }
 
-    @FXML
-    public void confirmCloneRepo(ActionEvent event) {
-        if (cloningDestinationDir != null && isNotEmpty(url.getText())) {
-            Stage currentStage = Utils.getStage(destinationPath);
-            notifyListeners(new RepoClonedEvent(cloningDestinationDir, url.getText(), cloningRepoName.getText()));
-            currentStage.close();
+    @Override
+    public void submit(ActionEvent event) {
+        Button caller = (Button) event.getSource();
+        RepoEvent repoEvent = null;
+        if (caller == cloneRepoBtn) {
+            if (cloningDestinationDir != null && isNotEmpty(url.getText())) {
+                repoEvent = new RepoClonedEvent(cloningDestinationDir, url.getText(), cloningRepoName.getText());
+            }
+        } else if (caller == createRepoBtn) {
+            if (creatingDestinationDir != null) {
+                repoEvent = new RepoCreatedEvent(creatingDestinationDir, creatingRepoName.getText());
+            }
+        } else if (caller == openRepoBtn) {
+            if (workingCopyDir != null) {
+                repoEvent = new RepoAddedEvent(workingCopyDir, addingRepoName.getText());
+            }
+        }
+        if (repoEvent != null) {
+            notifyListeners(repoEvent);
+            Utils.getStage(destinationPath).close();
         }
     }
 
-    @FXML
-    public void confirmAddRepo(ActionEvent event) {
-        if (workingCopyDir != null) {
-            Stage currentStage = Utils.getStage(workingCopyPath);
-            notifyListeners(new RepoAddedEvent(workingCopyDir, addingRepoName.getText()));
-            currentStage.close();
-        }
-    }
-
-    @FXML
-    public void confirmCreateRepo(ActionEvent event) {
-        if (creatingDestinationDir != null) {
-            Stage currentStage = Utils.getStage(newRepoDestinationPath);
-            notifyListeners(new RepoCreatedEvent(creatingDestinationDir, creatingRepoName.getText()));
-            currentStage.close();
-        }
-    }
-
-    @FXML
-    public void cancelAddRepo(ActionEvent event) {
+    @Override
+    public void cancel(ActionEvent event) {
         Utils.getStage(workingCopyPath).close();
     }
 

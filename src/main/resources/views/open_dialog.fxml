@@ -66,9 +66,9 @@
                               GridPane.rowIndex="3">
                             <children>
                                 <Button fx:id="cloneRepoBtn" disable="true" minWidth="60.0" mnemonicParsing="false"
-                                        onAction="#confirmCloneRepo" text="%dialog.open.button.add"/>
+                                        onAction="#submit" text="%dialog.open.button.add"/>
                                 <Button cancelButton="true" minWidth="60.0" mnemonicParsing="false"
-                                        onAction="#cancelAddRepo" text="%dialog.open.button.cancel">
+                                        onAction="#cancel" text="%dialog.open.button.cancel">
                                     <HBox.margin>
                                         <Insets left="10.0" right="10.0"/>
                                     </HBox.margin>
@@ -169,13 +169,13 @@
                               GridPane.rowIndex="2">
                             <children>
                                 <Button fx:id="openRepoBtn" disable="true" minWidth="60.0" mnemonicParsing="false"
-                                        onAction="#confirmAddRepo" text="%dialog.open.button.add">
+                                        onAction="#submit" text="%dialog.open.button.add">
                                     <HBox.margin>
                                         <Insets/>
                                     </HBox.margin>
                                 </Button>
                                 <Button cancelButton="true" minWidth="60.0" mnemonicParsing="false"
-                                        onAction="#cancelAddRepo" text="%dialog.open.button.cancel">
+                                        onAction="#cancel" text="%dialog.open.button.cancel">
                                     <HBox.margin>
                                         <Insets left="10.0" right="10.0"/>
                                     </HBox.margin>
@@ -247,8 +247,9 @@
                               GridPane.rowIndex="2">
                             <children>
                                 <Button minWidth="60.0" mnemonicParsing="false" text="%dialog.open.button.add"
-                                        disable="true" fx:id="createRepoBtn" onAction="#confirmCreateRepo"/>
-                                <Button minWidth="60.0" mnemonicParsing="false" text="%dialog.open.button.cancel">
+                                        disable="true" fx:id="createRepoBtn" onAction="#submit"/>
+                                <Button minWidth="60.0" onAction="#cancel" mnemonicParsing="false"
+                                        text="%dialog.open.button.cancel">
                                     <HBox.margin>
                                         <Insets left="10.0" right="10.0"/>
                                     </HBox.margin>

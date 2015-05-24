@@ -20,12 +20,8 @@ import org.yahor.vcs.ui.services.RepoService;
 import org.yahor.vcs.ui.utils.Utils;
 
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * @author yfilipchyk
@@ -86,11 +82,9 @@ public class RepoTabController implements Initializable {
                         if (repoService.currentBranch().contains(current.getValue())) {
                             TreeItem<String> parent = getTreeItem().getParent();
                             String currentBranch = current.getValue();
-                            List<TreeItem> parents = new LinkedList<>();
                             while (parent != null &&
                                     (!Repo.Branches().equals(parent.getValue()))) {
                                 currentBranch = parent.getValue() + "/" + currentBranch;
-                                parents.add(parent);
                                 parent = parent.getParent();
                             }
                             if (currentBranch.equals(repoService.currentBranch())) {
