@@ -7,6 +7,7 @@ import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.lib.{Constants, Repository}
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
+import org.eclipse.jgit.treewalk.filter.PathFilter
 import org.eclipse.jgit.treewalk.{AbstractTreeIterator, CanonicalTreeParser, FileTreeIterator}
 import org.yahor.vcs.ui.model.Tree
 
@@ -66,8 +67,9 @@ class Repo(val repo: Repository) {
     formatter.setRepository(repo)
     val commitTreeIterator = prepareTreeParser(repo, Constants.HEAD)
     val workTreeIterator = new FileTreeIterator(repo)
+    formatter.setPathFilter(PathFilter.create(file))
     val diffEntries = formatter.scan(commitTreeIterator, workTreeIterator)
-    diffEntries.filter(file == _.getNewPath).foreach(formatter.format)
+    diffEntries.foreach(formatter.format)
     try {
       outStream.toString("utf-8")
     } finally {

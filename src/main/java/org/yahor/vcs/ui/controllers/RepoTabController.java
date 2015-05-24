@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -94,13 +95,22 @@ public class RepoTabController implements Initializable {
     }
 
     private void showFileStatuses() {
+        setFileDiffHandler(workingCopyFiles);
         workingCopyFiles.setItems(repoService.modifiedFiles(editedIcon, untrackedIcon));
+        setFileDiffHandler(indexFiles);
         indexFiles.setItems(repoService.changedFiles(editedIcon, null, null));
-        workingCopyFiles.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (workingCopyFiles.getSelectionModel().getSelectedItem() != null) {
-                CompletableFuture.supplyAsync(() -> repoService.workingCopyDiff(newValue.getFilePath()))
-                        .thenAccept(html -> Platform.runLater(() -> diffView.getEngine().loadContent(html)));
-            }
+    }
+
+    private void setFileDiffHandler(TableView<File> tableView) {
+        tableView.setRowFactory(view -> {
+            TableRow<File> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty()) {
+                    CompletableFuture.supplyAsync(() -> repoService.workingCopyDiff(row.getItem().getFilePath()))
+                            .thenAccept(html -> Platform.runLater(() -> diffView.getEngine().loadContent(html)));
+                }
+            });
+            return row;
         });
     }
 
