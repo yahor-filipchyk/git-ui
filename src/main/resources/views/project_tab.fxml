@@ -1,62 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.web.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0"
-          prefWidth="581.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="org.yahor.vcs.ui.controllers.RepoTabController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="581.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.yahor.vcs.ui.controllers.RepoTabController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
     </rowConstraints>
     <children>
-        <TreeView fx:id="refs" prefHeight="5000.0" prefWidth="5000.0" GridPane.hgrow="ALWAYS"
-                  GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS">
+        <TreeView fx:id="refs" prefHeight="5000.0" prefWidth="5000.0" GridPane.hgrow="ALWAYS" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS">
         </TreeView>
-        <SplitPane dividerPositions="0.45" prefHeight="160.0" prefWidth="200.0" GridPane.columnIndex="1"
-                   GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.rowSpan="2">
+        <SplitPane dividerPositions="0.45" prefHeight="160.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.rowSpan="2">
             <items>
                 <GridPane prefHeight="292.0" prefWidth="202.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
                         <TableView fx:id="workingCopyFiles" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                             <columns>
-                                <TableColumn fx:id="workingCopyIcon" editable="false" maxWidth="22.0" prefWidth="25.0"
-                                             resizable="false"/>
-                                <TableColumn fx:id="workingCopyPath" editable="false" minWidth="500.0" prefWidth="-1.0"
-                                             text="File path"/>
+                                <TableColumn fx:id="workingCopyIcon" editable="false" maxWidth="22.0" prefWidth="25.0" resizable="false" />
+                                <TableColumn fx:id="workingCopyPath" editable="false" minWidth="500.0" prefWidth="-1.0" text="File path" />
                             </columns>
                         </TableView>
                         <TableView fx:id="indexFiles" prefHeight="200.0" prefWidth="200.0">
                             <columns>
-                                <TableColumn fx:id="indexFileIcon" editable="false" maxWidth="22.0" prefWidth="25.0"
-                                             resizable="false"/>
-                                <TableColumn fx:id="indexFilePath" editable="false" minWidth="500.0" prefWidth="-1.0"
-                                             text="File path"/>
+                                <TableColumn fx:id="indexFileIcon" editable="false" maxWidth="22.0" prefWidth="25.0" resizable="false" />
+                                <TableColumn fx:id="indexFilePath" editable="false" minWidth="500.0" prefWidth="-1.0" text="File path" />
                             </columns>
                         </TableView>
                     </children>
                 </GridPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"/>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <WebView fx:id="diffView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
             </items>
             <opaqueInsets>
-                <Insets/>
+                <Insets />
             </opaqueInsets>
         </SplitPane>
     </children>

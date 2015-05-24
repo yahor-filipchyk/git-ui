@@ -1,5 +1,6 @@
 package org.yahor.vcs.ui.controllers;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.web.WebView;
 import org.yahor.vcs.ui.git.Repo;
 import org.yahor.vcs.ui.model.File;
 import org.yahor.vcs.ui.services.RepoService;
@@ -20,6 +22,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,6 +43,7 @@ public class RepoTabController implements Initializable {
     @FXML private TableView<File> indexFiles;
     @FXML private TableColumn<File, ImageView> indexFileIcon;
     @FXML private TableColumn<File, String> indexFilePath;
+    @FXML private WebView diffView;
 
     private RepoService repoService;
 
@@ -92,6 +96,12 @@ public class RepoTabController implements Initializable {
     private void showFileStatuses() {
         workingCopyFiles.setItems(repoService.modifiedFiles(editedIcon, untrackedIcon));
         indexFiles.setItems(repoService.changedFiles(editedIcon, null, null));
+        workingCopyFiles.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (workingCopyFiles.getSelectionModel().getSelectedItem() != null) {
+                CompletableFuture.supplyAsync(() -> repoService.workingCopyDiff(newValue.getFilePath()))
+                        .thenAccept(html -> Platform.runLater(() -> diffView.getEngine().loadContent(html)));
+            }
+        });
     }
 
     private Image getImage(String path) {

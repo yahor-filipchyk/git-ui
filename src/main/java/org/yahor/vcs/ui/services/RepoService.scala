@@ -11,7 +11,7 @@ import org.eclipse.jgit.lib.Repository
 import org.yahor.vcs.ui.git.Repo
 import org.yahor.vcs.ui.model.{File => FileStatus}
 import org.yahor.vcs.ui.model.Tree
-import org.yahor.vcs.ui.utils.Utils
+import org.yahor.vcs.ui.utils.{DiffToHTML, Utils}
 import org.yahor.vcs.ui.utils.Utils._
 
 import scala.collection.JavaConversions._
@@ -52,6 +52,8 @@ class RepoService(val repo: Repo, val name: String) {
     val untracked: List[FileStatus] = pathsToFiles(repo.untrackedFiles(refresh = false), untrackedIcon, 15)
     FXCollections.observableArrayList(concatLists(modified, untracked))
   }
+
+  def workingCopyDiff(file: String): String = DiffToHTML.convert(file, repo.diffAgainstLatest(file))
 }
 
 object RepoService {

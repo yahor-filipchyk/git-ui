@@ -37,38 +37,38 @@ public class DiffToHTML {
     }
 
     public static String convert(String fileName, String diff) {
-        String[] splitted = diff.split("@@");
+        String[] splitted = diff.split("\\s@@\\s");
         StringBuilder chunks = new StringBuilder();
-        int totalAdded = 0;
-        int totalRemoved = 0;
+        AtomicInteger totalAdded = new AtomicInteger(0);
+        AtomicInteger totalRemoved = new AtomicInteger(0);
         for (int i = 1; i < splitted.length; i += 2) {
             String chunkInfo = splitted[i].trim();
             Matcher matcher = CHANGES.matcher(chunkInfo);
             Preconditions.checkState(matcher.find());
             int oldStartingPosition = Integer.parseInt(matcher.group(1));
-            int removed = Integer.parseInt(matcher.group(2));
             int newStartingPosition = Integer.parseInt(matcher.group(3));
-            int added = Integer.parseInt(matcher.group(4));
             AtomicInteger oldCurrent = new AtomicInteger(oldStartingPosition);
             AtomicInteger newCurrent = new AtomicInteger(newStartingPosition);
-            Stream<String> lines = NEW_LINE.splitAsStream(splitted[i + 1].substring(1)).map(line -> {
-                if (!line.startsWith("+")) {
-                    return String.format(diffLine, line.startsWith("-") ? "removed" : "none",
-                            oldCurrent.getAndIncrement(), line.startsWith("-") ? "" : newCurrent.getAndIncrement(),
+            Stream<String> lines = NEW_LINE.splitAsStream(splitted[i + 1]).map(line -> {
+                if (line.startsWith("-")) {
+                    totalRemoved.incrementAndGet();
+                    return String.format(diffLine, "removed", oldCurrent.getAndIncrement(), "",
+                            StringEscapeUtils.escapeHtml4(line));
+                } else if (line.startsWith("+")) {
+                    totalAdded.incrementAndGet();
+                    return String.format(diffLine, "added", "", newCurrent.getAndIncrement(),
                             StringEscapeUtils.escapeHtml4(line));
                 } else {
-                    return String.format(diffLine, "added", "", newCurrent.getAndIncrement(),
+                    return String.format(diffLine, "none", oldCurrent.getAndIncrement(), newCurrent.getAndIncrement(),
                             StringEscapeUtils.escapeHtml4(line));
                 }
             });
-            totalAdded += added;
-            totalRemoved += removed;
             chunks.append(HUNK_STARTING_TAG)
                     .append(lines.collect(Collectors.joining("\n")))
                     .append(HUNK_CLOSING_TAG);
         }
-        return template.replace("{added}", String.valueOf(totalAdded))
-                .replace("{removed}", String.valueOf(totalRemoved))
+        return template.replace("{added}", String.valueOf(totalAdded.get()))
+                .replace("{removed}", String.valueOf(totalRemoved.get()))
                 .replace("{header}", fileName)
                 .replace("{hunks}", chunks.toString());
     }
