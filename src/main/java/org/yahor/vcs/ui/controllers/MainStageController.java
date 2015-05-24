@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -39,6 +40,7 @@ public class MainStageController implements Initializable {
 
     @FXML private TabPane tabPane;
     @FXML private ToolBar toolbar;
+    @FXML private Label statusBar;
 
     @FXML
     public void open(ActionEvent event) throws IOException {
@@ -87,7 +89,9 @@ public class MainStageController implements Initializable {
     }
 
     private void disableInstruments() {
-
+        toolbar.getItems().stream()
+                .skip(1)
+                .forEach(item -> item.setDisable(true));
     }
 
     private void enableInstruments() {
@@ -101,6 +105,11 @@ public class MainStageController implements Initializable {
             Tab newTab = new Tab(repoService.name());
             newTab.setOnCloseRequest(closeEvent -> {
                 // TODO implement showing confirmation dialog
+
+                // latest is closing
+                if (tabPane.getTabs().size() == 1 && !closeEvent.isConsumed()) {
+                    disableInstruments();
+                }
             });
             newTab.setOnClosed(closedEvent -> repoService.close());
             GridPane gridPane = (GridPane) gridPaneWithController.getKey();
@@ -109,6 +118,7 @@ public class MainStageController implements Initializable {
             newTab.setContent(gridPane);
             tabPane.getTabs().add(newTab);
             tabPane.getSelectionModel().select(newTab);
+            statusBar.setText(repoService.currentBranch());
             ((RepoTabController) gridPaneWithController.getValue()).loadRepo(repoService);
         } catch (IOException e) {
             e.printStackTrace();

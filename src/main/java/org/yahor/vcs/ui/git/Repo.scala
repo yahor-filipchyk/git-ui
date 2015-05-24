@@ -32,6 +32,8 @@ class Repo(val repo: Repository) {
 
   def close(): Unit = repo.close()
 
+  def currentBranch: String = repo.getBranch
+
   def tags: List[String] = repo.getTags.entrySet().map(_.getKey).toList.sorted
 
   def branches: java.util.Map[String, Tree] = {

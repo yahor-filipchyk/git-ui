@@ -1,34 +1,31 @@
 package org.yahor.vcs.ui.controllers;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.web.WebView;
+import javafx.util.Callback;
 import org.yahor.vcs.ui.git.Repo;
 import org.yahor.vcs.ui.model.File;
 import org.yahor.vcs.ui.services.RepoService;
 import org.yahor.vcs.ui.utils.Utils;
 
 import java.net.URL;
-import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
-import static org.yahor.vcs.ui.utils.Utils.concatLists;
 
 /**
  * @author yfilipchyk
@@ -74,7 +71,40 @@ public class RepoTabController implements Initializable {
         indexFileIcon.setCellValueFactory(new PropertyValueFactory<>("icon"));
     }
 
+    private final Callback<TreeView<String>, TreeCell<String>> refsCellFactory = tv ->
+            new TreeCell<String>() {
+                @Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(getItem() != null ? getItem() : "");
+                        setGraphic(getTreeItem().getGraphic());
+                        TreeItem<String> current = getTreeItem();
+                        if (repoService.currentBranch().contains(current.getValue())) {
+                            TreeItem<String> parent = getTreeItem().getParent();
+                            String currentBranch = current.getValue();
+                            List<TreeItem> parents = new LinkedList<>();
+                            while (parent != null &&
+                                    (!Repo.Branches().equals(parent.getValue()))) {
+                                currentBranch = parent.getValue() + "/" + currentBranch;
+                                parents.add(parent);
+                                parent = parent.getParent();
+                            }
+                            if (currentBranch.equals(repoService.currentBranch())) {
+                                getStyleClass().add("active-branch");
+                            }
+                        } else {
+                            getStyleClass().remove("active-branch");
+                        }
+                    }
+                }
+            };
+
     private void showBranches() {
+        refs.setCellFactory(refsCellFactory);
         TreeItem<String> localBranches = Utils.createTreeItemWithIcon(Repo.Branches(), localIcon, 16, true);
         TreeItem<String> remotes = Utils.createTreeItemWithIcon(Repo.Remotes(), remoteIcon, 16, true);
         TreeItem<String> tags = Utils.createTreeItemWithIcon(Repo.Tags(), tagsIcon, 16, true);

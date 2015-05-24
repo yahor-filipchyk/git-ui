@@ -5,3 +5,8 @@
 .instrument {
     -fx-border-radius: 0;
 }
+
+.active-branch {
+    -fx-text-fill: #444;
+    -fx-font-weight: bold;
+}
