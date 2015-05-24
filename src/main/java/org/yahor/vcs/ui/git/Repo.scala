@@ -1,17 +1,14 @@
 package org.yahor.vcs.ui.git
 
-import java.io.{ByteArrayOutputStream, StringWriter, BufferedOutputStream, File}
-import javafx.scene.control.TreeItem
-import javafx.scene.image.Image
+import java.io.{ByteArrayOutputStream, File}
 
-import org.eclipse.jgit.api.{Status, StatusCommand, Git}
+import org.eclipse.jgit.api.{Git, Status}
 import org.eclipse.jgit.diff.DiffFormatter
-import org.eclipse.jgit.lib.{ObjectId, Constants, Repository}
+import org.eclipse.jgit.lib.{Constants, Repository}
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
-import org.eclipse.jgit.treewalk.{FileTreeIterator, CanonicalTreeParser, AbstractTreeIterator}
+import org.eclipse.jgit.treewalk.{AbstractTreeIterator, CanonicalTreeParser, FileTreeIterator}
 import org.yahor.vcs.ui.model.Tree
-import org.yahor.vcs.ui.utils.Utils
 
 import scala.collection.JavaConversions._
 
@@ -70,7 +67,7 @@ class Repo(val repo: Repository) {
     val commitTreeIterator = prepareTreeParser(repo, Constants.HEAD)
     val workTreeIterator = new FileTreeIterator(repo)
     val diffEntries = formatter.scan(commitTreeIterator, workTreeIterator)
-    diffEntries.filter(entry => file == entry.getNewPath).foreach(formatter.format)
+    diffEntries.filter(file == _.getNewPath).foreach(formatter.format)
     try {
       outStream.toString("utf-8")
     } finally {
@@ -124,7 +121,7 @@ object Repo {
 
   def prepareTreeParser(repo: Repository, objectId: String): AbstractTreeIterator = {
     val walk = new RevWalk(repo)
-    val commit = walk.parseCommit(ObjectId.fromString(objectId))
+    val commit = walk.parseCommit(repo.resolve(objectId))
     val tree = walk.parseTree(commit.getTree.getId)
     val oldTreeParser = new CanonicalTreeParser()
     val oldReader = repo.newObjectReader()

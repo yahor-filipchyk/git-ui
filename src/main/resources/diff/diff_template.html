@@ -14,7 +14,7 @@
 
         .header {
             height: 25px;
-            background-color: #eee;
+            background-color: #efefef;
             padding-top: 8px;
             padding-left: 10px;
             border-bottom: 1px solid #ccc;
@@ -31,8 +31,8 @@
 
         .line-number {
             font-size: 12px;
-            width: 76px;
-            background-color: #eee;
+            width: 66px;
+            background-color: #efefef;
             border-right: 1px solid #ccc;
             clear: left;
             padding-left: 4px;
@@ -48,7 +48,7 @@
         }
 
         .source {
-            padding-left: 85px;
+            padding-left: 75px;
         }
 
         pre {
@@ -59,13 +59,43 @@
             float: right;
             padding-right: 4px;
         }
+
+        .file {
+            margin-left: 4px;
+        }
+
+        .added-count {
+            font-size: 14px;
+            padding: 1px 7px 1px 7px;
+            background-color: #cfc;
+            color: #399839;
+            border-radius: 4px;
+        }
+
+        .removed-count {
+            font-size: 14px;
+            margin-left: 4px;
+            padding: 1px 7px 1px 7px;
+            background-color: #fdd;
+            color: #c33;
+            border-radius: 4px;
+        }
+
+        .hunk {
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            margin: 2px 0px 2px 0px;
+        }
     </style>
 </head>
 <body>
 <div class="diff-container">
-    <div class="header">{header}</div>
+    <div class="header">
+        <span class="added-count">+{added}</span><span class="removed-count">-{removed}</span>
+        <span class="file">{header}</span>
+    </div>
     <div class="contents-container">
-        {lines}
+        {hunks}
     </div>
 </div>
 </body>

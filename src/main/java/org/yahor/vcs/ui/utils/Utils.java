@@ -12,6 +12,10 @@ import javafx.util.Pair;
 import org.yahor.vcs.ui.controllers.ObservableController;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -80,5 +84,9 @@ public final class Utils {
             combining = Stream.concat(combining, list.stream());
         }
         return combining.collect(Collectors.toList());
+    }
+
+    public static String getFileContents(Path file) throws IOException {
+        return new String(Files.readAllBytes(file), Charset.forName("utf-8"));
     }
 }
