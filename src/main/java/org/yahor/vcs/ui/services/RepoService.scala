@@ -25,10 +25,10 @@ class RepoService(val repo: Repo, val name: String) {
 
   def close(): Unit = repo.close()
 
+  def currentBranch: String = repo.currentBranch
+
   def tags(icon: Image): java.util.List[TreeItem[String]] =
     repo.tags.map(tag => createTreeItemWithIcon(Repository.shortenRefName(tag), icon, 10, false))
-
-  def currentBranch: String = repo.currentBranch
 
   def localBranches(branchIcon: Image, folderIcon: Image): java.util.List[TreeItem[String]] =
     addFoldersAndBranches(new TreeItem[String](""),

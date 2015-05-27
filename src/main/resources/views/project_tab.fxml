@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.web.*?>
-<?import javafx.geometry.*?>
 <?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0"
           prefWidth="581.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
@@ -37,12 +37,16 @@
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                                     </columnConstraints>
                                     <rowConstraints>
+                                        <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0"
+                                                        vgrow="SOMETIMES"/>
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0"
+                                                        vgrow="SOMETIMES"/>
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                                     </rowConstraints>
                                     <children>
                                         <TableView fx:id="workingCopyFiles" prefHeight="200.0" prefWidth="200.0"
-                                                   GridPane.rowIndex="1">
+                                                   GridPane.rowIndex="3">
                                             <columns>
                                                 <TableColumn fx:id="workingCopyIcon" editable="false" maxWidth="22.0"
                                                              prefWidth="25.0" resizable="false"/>
@@ -50,7 +54,8 @@
                                                              prefWidth="-1.0" text="File path"/>
                                             </columns>
                                         </TableView>
-                                        <TableView fx:id="indexFiles" prefHeight="200.0" prefWidth="200.0">
+                                        <TableView fx:id="indexFiles" prefHeight="200.0" prefWidth="200.0"
+                                                   GridPane.rowIndex="1">
                                             <columns>
                                                 <TableColumn fx:id="indexFileIcon" editable="false" maxWidth="22.0"
                                                              prefWidth="25.0" resizable="false"/>
@@ -58,6 +63,18 @@
                                                              prefWidth="-1.0" text="File path"/>
                                             </columns>
                                         </TableView>
+                                        <Label style="-fx-font-weight: bold;" text="%repo.label.index"
+                                               textFill="#444" GridPane.hgrow="ALWAYS">
+                                            <GridPane.margin>
+                                                <Insets left="5.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label style="-fx-font-weight: bold;" text="%repo.label.working_copy"
+                                               textFill="#444" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+                                            <GridPane.margin>
+                                                <Insets left="5.0"/>
+                                            </GridPane.margin>
+                                        </Label>
                                     </children>
                                 </GridPane>
                                 <VBox prefHeight="200.0" prefWidth="100.0">
