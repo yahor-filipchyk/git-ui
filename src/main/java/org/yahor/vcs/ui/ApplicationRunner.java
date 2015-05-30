@@ -1,15 +1,11 @@
 package org.yahor.vcs.ui;
 
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.util.Pair;
-import org.yahor.vcs.ui.controllers.MainStageController;
-import org.yahor.vcs.ui.controllers.ObservableController;
-import org.yahor.vcs.ui.utils.Utils;
 import org.yahor.vcs.ui.utils.UTF8Control;
+import org.yahor.vcs.ui.utils.Utils;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -34,9 +30,6 @@ public class ApplicationRunner extends Application {
     public void start(Stage primaryStage) throws Exception {
         ApplicationRunner.primaryStage = primaryStage;
         updateRoot(Locale.getDefault());
-        primaryStage.setOnCloseRequest(event -> {
-//           FXUtils.loadPane()
-        });
         primaryStage.show();
     }
 

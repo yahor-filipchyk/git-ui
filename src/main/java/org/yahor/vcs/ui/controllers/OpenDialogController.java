@@ -82,9 +82,9 @@ public class OpenDialogController extends BaseDialogController {
             if (caller == tabClone) {
                 heightToSet = baseHeight;
             } else if (caller == tabOpen) {
-                heightToSet = baseHeight - 35;
+                heightToSet = baseHeight - cloningRepoName.getHeight();
             } else if (caller == tabCreate) {
-                heightToSet = baseHeight - 35;
+                heightToSet = baseHeight - cloningRepoName.getHeight();
             }
             if (heightToSet != window.getHeight()) {
                 window.setHeight(heightToSet);

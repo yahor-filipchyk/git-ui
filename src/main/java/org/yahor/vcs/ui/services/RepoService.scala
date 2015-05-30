@@ -1,18 +1,15 @@
 package org.yahor.vcs.ui.services
 
 import java.io.File
-import java.util
-import java.util.stream.Collectors
 import javafx.collections.{FXCollections, ObservableList}
 import javafx.scene.control.TreeItem
 import javafx.scene.image.Image
 
 import org.eclipse.jgit.lib.Repository
 import org.yahor.vcs.ui.git.Repo
-import org.yahor.vcs.ui.model.{File => FileStatus}
-import org.yahor.vcs.ui.model.Tree
-import org.yahor.vcs.ui.utils.{DiffToHTML, Utils}
+import org.yahor.vcs.ui.model.{File => FileStatus, Tree}
 import org.yahor.vcs.ui.utils.Utils._
+import org.yahor.vcs.ui.utils.{DiffToHTML, Utils}
 
 import scala.collection.JavaConversions._
 
