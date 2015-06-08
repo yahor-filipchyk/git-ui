@@ -52,7 +52,7 @@ class Repo(val repo: Repository) {
   def allBranchesSorted: java.util.List[String] = repo.getAllRefs.entrySet()
     .view
     .map(_.getKey)
-    .filter(b => b.startsWith(Constants.R_HEADS) || b.startsWith(Constants.R_REMOTES))
+    .filter(_.startsWith(Constants.R_REMOTES))
     .map(Repository.shortenRefName)
     .toList.sorted
 

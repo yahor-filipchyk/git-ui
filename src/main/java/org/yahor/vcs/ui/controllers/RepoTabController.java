@@ -2,6 +2,8 @@ package org.yahor.vcs.ui.controllers;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ContextMenu;
@@ -45,6 +47,7 @@ public class RepoTabController implements Initializable {
     @FXML private WebView diffView;
 
     private RepoService repoService;
+    private ObjectProperty<TreeItem<String>> currentBranchNode = new SimpleObjectProperty<>();
 
     private final Image tagIcon = getImage("images/tag.png");
     private final Image branchIcon = getImage("images/branch.png");
@@ -94,6 +97,7 @@ public class RepoTabController implements Initializable {
                             }
                             if (currentBranch.equals(repoService.currentBranch())) {
                                 getStyleClass().add("active-branch");
+                                currentBranchNode.setValue(getTreeItem());
                             }
                         } else {
                             getStyleClass().remove("active-branch");
@@ -122,6 +126,9 @@ public class RepoTabController implements Initializable {
         refs.getChildren().add(remotes);
         refs.getChildren().add(tags);
         this.refs.setRoot(refs);
+        if (currentBranchNode.get() != null) {
+            currentBranchNode.get().getParent().setExpanded(true);
+        }
     }
 
     private void showFileStatuses() {

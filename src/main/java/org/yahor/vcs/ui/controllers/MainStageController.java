@@ -113,7 +113,15 @@ public class MainStageController implements Initializable {
 
     private void checkoutBranch(BranchCheckedOutEvent event) {
         getCurrentRepo().checkoutBranch(event.remoteBranch(), event.localBranch(), event.track());
-        getCurrentTabController().loadRepo(getCurrentRepo());
+        updateCurrentRepo();
+    }
+
+    private void updateCurrentRepo() {
+        Platform.runLater(() -> {
+            final RepoService currentRepo = getCurrentRepo();
+            getCurrentTabController().loadRepo(getCurrentRepo());
+            statusBar.setText(currentRepo.currentBranch());
+        });
     }
 
     private void disableInstruments() {
