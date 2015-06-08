@@ -24,6 +24,8 @@ class RepoService(val repo: Repo, val name: String) {
 
   def currentBranch: String = repo.currentBranch
 
+  def repoDir: File = repo.repo.getDirectory
+
   def tags(icon: Image): java.util.List[TreeItem[String]] =
     repo.tags.map(tag => createTreeItemWithIcon(Repository.shortenRefName(tag), icon, 10, false))
 
@@ -53,6 +55,9 @@ class RepoService(val repo: Repo, val name: String) {
   }
 
   def workingCopyDiff(file: String): String = DiffToHTML.convert(file, repo.diffAgainstLatest(file))
+
+  def checkoutBranch(remoteBranch: String, localBranch: String, track: Boolean) =
+    repo.checkoutBranch(remoteBranch, localBranch, track)
 }
 
 object RepoService {

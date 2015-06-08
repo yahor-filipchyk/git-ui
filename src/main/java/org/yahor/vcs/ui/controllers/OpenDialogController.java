@@ -157,8 +157,10 @@ public class OpenDialogController extends BaseDialogController {
             }
         }
         if (repoEvent != null) {
+            long start = System.currentTimeMillis();
             notifyListeners(repoEvent);
             Utils.getStage(destinationPath).close();
+            System.out.println(System.currentTimeMillis() - start);
         }
     }
 

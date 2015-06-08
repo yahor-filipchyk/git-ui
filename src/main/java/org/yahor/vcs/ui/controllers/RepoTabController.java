@@ -1,8 +1,11 @@
 package org.yahor.vcs.ui.controllers;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -20,8 +23,10 @@ import org.yahor.vcs.ui.services.RepoService;
 import org.yahor.vcs.ui.utils.Utils;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * @author yfilipchyk
@@ -93,6 +98,7 @@ public class RepoTabController implements Initializable {
                         } else {
                             getStyleClass().remove("active-branch");
                         }
+                        setContextMenu(createBranchContextMenu());
                     }
                 }
             };
@@ -119,13 +125,13 @@ public class RepoTabController implements Initializable {
     }
 
     private void showFileStatuses() {
-        setFileDiffHandler(workingCopyFiles);
+        setFileHandler(workingCopyFiles);
         workingCopyFiles.setItems(repoService.modifiedFiles(editedIcon, untrackedIcon));
-        setFileDiffHandler(indexFiles);
+        setFileHandler(indexFiles);
         indexFiles.setItems(repoService.changedFiles(editedIcon, null, null));
     }
 
-    private void setFileDiffHandler(TableView<File> tableView) {
+    private void setFileHandler(TableView<File> tableView) {
         tableView.setRowFactory(view -> {
             TableRow<File> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -134,8 +140,44 @@ public class RepoTabController implements Initializable {
                             .thenAccept(html -> Platform.runLater(() -> diffView.getEngine().loadContent(html)));
                 }
             });
+            row.contextMenuProperty().bind(Bindings
+                    .when(row.emptyProperty())
+                    .then(NO_CONTEXT_MENU)
+                    .otherwise(createFileContextMenu()));
             return row;
         });
+    }
+
+    private static final ContextMenu NO_CONTEXT_MENU = null;
+    private static final String[] FILE_CONTEXT_MENU_ITEMS = {
+            "Stage",
+            "Discard",
+            "Remove",
+            "Show in explorer"
+    };
+
+    private ContextMenu createFileContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.getItems().addAll(Arrays.stream(FILE_CONTEXT_MENU_ITEMS)
+                .map(MenuItem::new)
+                .collect(Collectors.toList()));
+        return contextMenu;
+    }
+
+    private static final String[] BRANCH_CONTEXT_MENU_ITEMS = {
+            "Checkout",
+            "Merge",
+            "Rebase",
+            "Pull",
+            "Delete"
+    };
+
+    private ContextMenu createBranchContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.getItems().addAll(Arrays.stream(BRANCH_CONTEXT_MENU_ITEMS)
+                .map(MenuItem::new)
+                .collect(Collectors.toList()));
+        return contextMenu;
     }
 
     private Image getImage(String path) {

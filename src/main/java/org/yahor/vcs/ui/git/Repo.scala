@@ -2,7 +2,7 @@ package org.yahor.vcs.ui.git
 
 import java.io.{ByteArrayOutputStream, File}
 
-import org.eclipse.jgit.api.{Git, Status}
+import org.eclipse.jgit.api.{CreateBranchCommand, Git, Status}
 import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.lib.{Constants, Repository}
 import org.eclipse.jgit.revwalk.RevWalk
@@ -49,6 +49,15 @@ class Repo(val repo: Repository) {
     Map(Branches -> heads, Remotes -> remotes)
   }
 
+  def allBranchesSorted: java.util.List[String] = repo.getAllRefs.entrySet()
+    .view
+    .map(_.getKey)
+    .filter(b => b.startsWith(Constants.R_HEADS) || b.startsWith(Constants.R_REMOTES))
+    .map(Repository.shortenRefName)
+    .toList.sorted
+
+  def remotes: java.util.Set[String] = repo.getRemoteNames
+
   def createBranch(name: String): Unit = git().branchCreate().setName(name).call()
 
   def deleteBranch(name: String): Unit = git().branchDelete().setBranchNames(name).call()
@@ -77,6 +86,19 @@ class Repo(val repo: Repository) {
     } finally {
       outStream.close()
     }
+  }
+
+  def checkoutBranch(remoteBranch: String, localBranch: String, track: Boolean) = {
+    println(remoteBranch)
+    println(repo.getRef(remoteBranch))
+    new Git(repo).checkout()
+      .setCreateBranch(true)
+      .setName(localBranch)
+      .setUpstreamMode(if (track)
+      CreateBranchCommand.SetupUpstreamMode.TRACK
+    else CreateBranchCommand.SetupUpstreamMode.NOTRACK)
+      .setStartPoint(repo.getRef(remoteBranch).getObjectId.name)
+      .call()
   }
 }
 

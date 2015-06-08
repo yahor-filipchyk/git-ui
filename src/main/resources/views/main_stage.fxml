@@ -124,7 +124,7 @@
                         <MenuItem mnemonicParsing="false" text="%menu.repo.push"/>
                         <MenuItem mnemonicParsing="false" text="%menu.repo.pull"/>
                         <MenuItem mnemonicParsing="false" text="%menu.repo.fetch"/>
-                        <MenuItem mnemonicParsing="false" text="%menu.repo.checkout"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.repo.checkout" onAction="#checkout"/>
                         <MenuItem mnemonicParsing="false" text="%menu.repo.branch"/>
                         <MenuItem mnemonicParsing="false" text="%menu.repo.merge"/>
                         <MenuItem mnemonicParsing="false" text="%menu.repo.rebase"/>
@@ -215,7 +215,7 @@
                     </graphic>
                 </Button>
                 <Button disable="true" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0"
-                        prefWidth="30.0" styleClass="instrument">
+                        prefWidth="30.0" styleClass="instrument" onAction="#checkout">
                     <tooltip>
                         <Tooltip text="%menu.repo.checkout"/>
                     </tooltip>

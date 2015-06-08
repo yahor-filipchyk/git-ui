@@ -1,5 +1,6 @@
 package org.yahor.vcs.ui.controllers;
 
+import com.google.common.collect.Maps;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,15 +17,19 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import org.yahor.vcs.ui.ApplicationRunner;
+import org.yahor.vcs.ui.events.BranchCheckedOutEvent;
 import org.yahor.vcs.ui.events.RepoAddedEvent;
 import org.yahor.vcs.ui.events.RepoClonedEvent;
 import org.yahor.vcs.ui.events.RepoCreatedEvent;
+import org.yahor.vcs.ui.git.Repo;
 import org.yahor.vcs.ui.services.RepoService;
 import org.yahor.vcs.ui.utils.Utils;
 import org.yahor.vcs.ui.utils.Language;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -33,10 +38,12 @@ import java.util.ResourceBundle;
 public class MainStageController implements Initializable {
 
     private static final String OPEN_DIALOG_FILE = "views/open_dialog.fxml";
+    private static final String CHECKOUT_DIALOG_FILE = "views/checkout_dialog.fxml";
     private static final String PROJECT_TAB_FILE = "views/project_tab.fxml";
     private static final String OPEN_DIALOG_TITLE = "dialog.open.title";
 
     private ResourceBundle bundle;
+    private Map<Tab, Pair<RepoService, RepoTabController>> repos = Maps.newHashMap();
 
     @FXML private TabPane tabPane;
     @FXML private ToolBar toolbar;
@@ -55,6 +62,22 @@ public class MainStageController implements Initializable {
         sceneWithController.getValue().addListener(RepoAddedEvent.class, this::addRepo);
         sceneWithController.getValue().addListener(RepoClonedEvent.class, this::cloneRepo);
         sceneWithController.getValue().addListener(RepoCreatedEvent.class, this::createRepo);
+    }
+
+    @FXML public void checkout(ActionEvent event) throws IOException {
+        Stage stage = new Stage(StageStyle.UTILITY);
+        stage.setTitle("Checkout branch");
+        Pair<Parent, ObservableController> sceneWithController = Utils.loadPaneWithController(CHECKOUT_DIALOG_FILE, bundle);
+        stage.setScene(new Scene(sceneWithController.getKey()));
+        stage.setResizable(false);
+        stage.setAlwaysOnTop(true);
+        stage.show();
+        sceneWithController.getValue().addListener(BranchCheckedOutEvent.class, this::checkoutBranch);
+        RepoService currentRepo = getCurrentRepo();
+        ((CheckoutDialogController) sceneWithController.getValue()).updateBranchesList(
+                currentRepo.repoDir(),
+                currentRepo.repo().allBranchesSorted(),
+                currentRepo.repo().remotes());
     }
 
     @FXML
@@ -88,6 +111,11 @@ public class MainStageController implements Initializable {
         addNewTab(repoService);
     }
 
+    private void checkoutBranch(BranchCheckedOutEvent event) {
+        getCurrentRepo().checkoutBranch(event.remoteBranch(), event.localBranch(), event.track());
+        getCurrentTabController().loadRepo(getCurrentRepo());
+    }
+
     private void disableInstruments() {
         toolbar.getItems().stream()
                 .skip(1)
@@ -98,6 +126,13 @@ public class MainStageController implements Initializable {
         toolbar.getItems().forEach(item -> item.setDisable(false));
     }
 
+    private RepoService getCurrentRepo() {
+        return repos.get(tabPane.getTabs().filtered(Tab::isSelected).get(0)).getKey();
+    }
+
+    private RepoTabController getCurrentTabController() {
+        return repos.get(tabPane.getTabs().filtered(Tab::isSelected).get(0)).getValue();
+    }
 
     private void addNewTab(RepoService repoService) {
         try {
@@ -106,6 +141,7 @@ public class MainStageController implements Initializable {
             newTab.setOnCloseRequest(closeEvent -> {
                 // TODO implement showing confirmation dialog
 
+                repos.remove(newTab);
                 // latest is closing
                 if (tabPane.getTabs().size() == 1 && !closeEvent.isConsumed()) {
                     disableInstruments();
@@ -119,7 +155,9 @@ public class MainStageController implements Initializable {
             tabPane.getTabs().add(newTab);
             tabPane.getSelectionModel().select(newTab);
             statusBar.setText(repoService.currentBranch());
-            ((RepoTabController) gridPaneWithController.getValue()).loadRepo(repoService);
+            RepoTabController repoTabController = (RepoTabController) gridPaneWithController.getValue();
+            repoTabController.loadRepo(repoService);
+            repos.put(newTab, new Pair<>(repoService, repoTabController));
         } catch (IOException e) {
             e.printStackTrace();
         }
